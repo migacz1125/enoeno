@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" data-framework="angularjs">
+	<head>
+		<meta charset="utf-8">
+		<title>Ordering App</title>
+		<link rel="stylesheet" href="css/index.css">
+		<link rel="stylesheet" href="/node_modules/bulma/css/bulma.min.css">
+		<link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css">
+		<style>[ng-cloak] { display: none; }</style>
+	</head>
+	<body ng-app="orders">
+		<div ng-view=""></div>
+		<script src="node_modules/angular/angular.js"></script>
+		<script src="node_modules/angular-route/angular-route.js"></script>
+		<script src="node_modules/angular-resource/angular-resource.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/app.routes.js"></script>
+		<script src="js/orders/controller/OrderListCtrl.js"></script>
+		<script src="js/orders/services/OrderService.js"></script>
+		<script src="js/services/OrderStorage.js"></script>
+		<script src="js/orders/directives/todoFocus.js"></script>
+		<script src="js/orders/directives/todoEscape.js"></script>
+	</body>
+</html>
