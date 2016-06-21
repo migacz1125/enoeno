@@ -9,13 +9,35 @@
             </form>
         </div>
     </header>
-    <section class="section" ng-show="orderService.orders.length" ng-cloak>
-        <div class="container">
-            <input id="toggle-all" type="checkbox" ng-trim="true" ng-model="isAllCompleted" ng-click="orderService.markAll(isAllCompleted)">
-            <label for="toggle-all">Mark all orders as complete</label>
+    <section ng-show="orderService.orders.length" ng-cloak>
+        <div>
+            <md-checkbox ng-checked="isAllCompleted"
+                         ng-model="isAllCompleted"
+                         ng-click="orderService.markAll(isAllCompleted)">
+                <span ng-if="isAllCompleted">Un-</span>Select All
+            </md-checkbox>
+
+            <!--<md-list-item ng-repeat="message in messages">
+                <md-checkbox ng-model="message.selected"></md-checkbox>
+                <p>{{message.title}}</p>
+                <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>
+            </md-list-item>-->
+
+            <md-list-item ng-repeat="order in orderService.orders | filter:statusFilter track by $index">
+                <md-checkbox ng-attr-id="{{ 'order-' + $index }}" ng-model="order.completed" ng-change="orderService.updateOrder(order)"></md-checkbox>
+                <p>{{order.title}}</p>
+                <md-icon class="md-secondary" ng-click="orderService.editOrder(order)" ></md-icon>
+                <i class="material-icons">mode_edit</i>
+                <!--<i class="material-icons">accessibility</i>-->
+                <!--<md-icon class="md-secondary" ng-click="orderService.editOrder(order)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
+                <!--<md-icon class="md-secondary" ng-click="orderService.editOrder(order)" aria-label="Chat">-->
+                    <!--<span class="icon md-secondary">-->
+                    <!--<i ng-class="{'fa fa-edit': !order.isEditMode, 'fa fa-floppy-o': order.isEditMode}"></i>-->
+                    <!--</span>-->
+                <!--</md-icon>-->
+            </md-list-item>
             <ul>
-                <li class="order-item" ng-repeat="order in orderService.orders | filter:statusFilter track by $index">
-                    <div class="columns">
+                <li ng-repeat="order in orderService.orders | filter:statusFilter track by $index">
                         <div class="column is-9">
                             <div class="columns">
                                 <div class="column is-1 has-text-centered">
@@ -50,7 +72,6 @@
                                 </span>
                             </a>
                         </div>
-                    </div>
                 </li>
             </ul>
             <div class="columns" ng-show="orderService.orders.length" ng-cloak>
