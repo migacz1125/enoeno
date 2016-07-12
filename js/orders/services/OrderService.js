@@ -96,8 +96,9 @@ angular.module('orders').service('OrderService', ['OrderStorage', function(Order
 	 *
 	 * @param {Object} order
 	 */
-	this.editOrder = function (order) {
-		console.log('----- editOrder: ', order);
+	this.editOrder = function ($event, order) {
+		$event.stopPropagation();
+
 		order.isEditMode = true;
 		this.oldOrder = angular.extend({}, order);
 	};
@@ -107,13 +108,13 @@ angular.module('orders').service('OrderService', ['OrderStorage', function(Order
 	 *
 	 * @param {Object} order
 	 */
-	this.revertEdits = function (order) {
+	this.revertEdits = function ($event, order) {
+		$event.stopPropagation();
 
 		order.title = this.oldOrder.title;
+		order.isEditMode = false;
 
 		this.updateOrder(order);
-
-		order.isEditMode = false;
 		this.oldOrder = null;
 		this.setIsCanceled(true);
 	};
@@ -124,8 +125,9 @@ angular.module('orders').service('OrderService', ['OrderStorage', function(Order
 	 *
 	 * @param {Object} order
 	 */
-	this.saveEdits = function (order) {
-		console.log('------ saveEdits:order: ', order);
+	this.saveEdits = function ($event, order) {
+		$event.stopPropagation();
+
 		if (this.isCanceled()) {
 			this.setIsCanceled(false);
 			return;
@@ -148,16 +150,22 @@ angular.module('orders').service('OrderService', ['OrderStorage', function(Order
 	/**
 	 * Mark all order item as completed or uncompleted by arg value.
 	 *
-	 * @param {boolean} completed
+	 * @param {boolean} isCompletedAll
 	 */
-	this.markAll = function (completed) {
-		this.orders.forEach(function (order) {
-			if (order.completed !== completed) {
-				order.completed = !order.completed;
-
+	this.markAll = function (isCompletedAll) {
+		if (isCompletedAll) {
+			this.orders.forEach(function (order) {
+				order.completed = false;
 				this.updateOrder(order);
-			}
-		}, this);
+			}, this);
+		} else {
+			this.orders.forEach(function (order) {
+				if (!order.completed) {
+					order.completed = true;
+					this.updateOrder(order);
+				}
+			}, this);
+		}
 	};
 
 	/**

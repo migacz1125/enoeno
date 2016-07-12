@@ -13,6 +13,7 @@ angular.module('orders').controller('OrderListCtrl', [
 
 		var controller = this;
 		$scope.orderService = OrderService;
+		$scope.isAllCompleted = OrderService.isAllOrderCompleted();
 
 		/**
 		 * Listener to all changes om oreder service.
