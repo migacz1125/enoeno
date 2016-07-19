@@ -10,7 +10,8 @@ angular.module('orders.routes', ['ngRoute'])
 		'use strict';
 
 		var routeConfig = {
-			controller: 'OrderListCtrl',
+			controller: 'OrderListController',
+			controllerAs: 'OrderListCtrl',
 			templateUrl: 'js/templates/home.html',
 			resolve: {
 				ordersData: function (OrderService) {

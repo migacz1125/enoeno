@@ -11,8 +11,6 @@ angular.module('orders')
 		return function (scope, element, attrs) {
 			scope.$watch(attrs.todoFocus, function (newVal) {
 				if (newVal) {
-					console.log('---- set focus to edit element !!!');
-					console.log('---- elem: ', element);
 					$timeout(function() {
 						element[0].focus();
 					});

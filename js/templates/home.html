@@ -1,87 +1,80 @@
 <section id="todoapp" class="section">
     <header class="header">
-        <div class="container">
-            <h1 class="title is-1 has-text-centered">Order meal</h1>
-            <form id="todo-form" ng-submit="orderService.addOrder()">
-                <p class="control">
-                    <input id="new-order" class="input is-medium" type="text" placeholder="What You will to order ?" ng-model="orderService.getNewOrder().title" autofocus>
-                </p>
+        <div layout="row" layout-align="center center">
+            <h1 class="md-display-1">Order meal</h1>
+        </div>
+        <div layout="row" layout-align="center center" class="md-padding">
+            <form flex id="todo-form" ng-submit="OrderListCtrl.orderService.addOrder()">
+                <input class="width--100" id="new-order" type="text" placeholder="What You will to order ?" ng-model="OrderListCtrl.orderService.getNewOrder().title" autofocus>
             </form>
         </div>
     </header>
-    <section class="section" ng-show="orderService.orders.length" ng-cloak>
-        <div class="container">
-            <input id="toggle-all" type="checkbox" ng-trim="true" ng-model="isAllCompleted" ng-click="orderService.markAll(isAllCompleted)">
-            <label for="toggle-all">Mark all orders as complete</label>
-            <ul>
-                <li class="order-item" ng-repeat="order in orderService.orders | filter:statusFilter track by $index">
-                    <div class="columns">
-                        <div class="column is-9">
-                            <div class="columns">
-                                <div class="column is-1 has-text-centered">
-                                    <input  ng-attr-id="{{ 'order-' + $index }}" type="checkbox" ng-model="order.completed" ng-change="orderService.updateOrder(order)">
-                                </div>
-                                <div class="column has-text-left" ng-class="{'order-completed': order.completed}">
-                                    <div ng-show="!order.isEditMode">
-                                        <label ng-attr-for="{{ 'order-' + $index }}" class="title is-medium" ng-trim="false">{{order.title}}</label>
-                                    </div>
-                                    <div ng-show="order.isEditMode">
-                                        <form ng-submit="orderService.saveEdits(order)">
-                                            <input for="order.id" class="input is-medium is-primary" ng-trim="false"
-                                                   type="text"
-                                                   ng-model="order.title"
-                                                   todo-escape="orderService.revertEdits(order)"
-                                                   ng-blur="orderService.saveEdits(order)"
-                                                   autofocus>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+    <section ng-show="OrderListCtrl.orders.length" class="md-padding" ng-cloak>
+            <div id="filters" layout="row" layout-align="center center">
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === ''}"
+                           ng-class="{selected: OrderListCtrl.status === ''}"
+                           ng-href="#/" >All
+                </md-button>
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === OrderListCtrl.TAP_ACTIVE}"
+                           ng-class="{selected: OrderListCtrl.status === OrderListCtrl.TAP_ACTIVE}"
+                           ng-href="#/active">Active
+                </md-button>
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === OrderListCtrl.TAP_COMPLETED}"
+                           ng-class="{selected: OrderListCtrl.status === OrderListCtrl.TAP_COMPLETED}"
+                           ng-href="#/completed">Completed
+                </md-button>
+            </div>
+            <div id="todo-list" class="md-padding">
+                <md-checkbox ng-model="OrderListCtrl.isAllCompleted"
+                             ng-click="OrderListCtrl.orderService.markAll(OrderListCtrl.isAllCompleted)"
+                             ng-change="OrderListCtrl.isAllCompleted = !OrderListCtrl.isAllCompleted">
+                    <span ng-show="OrderListCtrl.isAllCompleted">Un-</span>Select All
+                </md-checkbox>
+                <md-list>
+                    <md-list-item ng-repeat="order in OrderListCtrl.orders | filter:OrderListCtrl.statusFilter track by $index">
+                        <md-checkbox ng-attr-id="{{ 'order-' + $index }}"
+                                     ng-model="order.completed"
+                                     ng-change="OrderListCtrl.orderService.updateOrder(order)"
+                                     ng-disabled="order.isEditMode"
+                                     class="green">
+                        </md-checkbox>
+                        <div ng-if="!order.isEditMode">
+                            <p>{{order.title}}</p>
                         </div>
-                        <div class="column is-3">
-                            <a class="button is-success" ng-click="order.isEditMode ? orderService.saveEdits(order) : orderService.editOrder(order)">
-                                <span class="icon">
-                                    <i ng-class="{'fa fa-edit': !order.isEditMode, 'fa fa-floppy-o': order.isEditMode}"></i>
-                                </span>
-                            </a>
-                            <a class="button is-danger" ng-click="order.isEditMode ? orderService.revertEdits(order) : orderService.removeOrder(order)">
-                                <span class="icon">
-                                    <i ng-class="{'fa fa-trash': !order.isEditMode, 'fa fa-ban': order.isEditMode}"></i>
-                                </span>
-                            </a>
+                        <div ng-if="order.isEditMode" layout="row">
+                            <form flex ng-submit="OrderListCtrl.orderService.saveEdits($event, order)">
+                                <input class="width--100" for="order.id" ng-trim="false"
+                                       type="text"
+                                       ng-model="order.title"
+                                       todo-escape="OrderListCtrl.orderService.revertEdits($event, order)"
+                                       ng-blur="OrderListCtrl.orderService.saveEdits($event, order)"
+                                       ng-disabled="!order.isEditMode">
+                            </form>
                         </div>
-                    </div>
-                </li>
-            </ul>
-            <div class="columns" ng-show="orderService.orders.length" ng-cloak>
-                <div class="column is-2">
-                    <strong>{{remainingCount}}</strong>
-                    <ng-pluralize count="remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
+                        <div ng-show="order.isEditMode" class="md-secondary">
+                            <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.saveEdits($event, order)">done</md-icon>
+                            <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.revertEdits($event, order)">clear</md-icon>
+                        </div>
+                        <div ng-show="!order.isEditMode" class="md-secondary">
+                            <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.editOrder($event, order)">mode_edit</md-icon>
+                            <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </div>
+            <div layout="column" class="md-padding" layout-align="center center" ng-show="OrderListCtrl.orders.length" ng-cloak>
+                <div flex>
+                    <strong>{{OrderListCtrl.remainingCount}}</strong>
+                    <ng-pluralize count="OrderListCtrl.remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
                 </div>
-                <div class="column is-8">
-                    <ul id="filters">
-                        <li>
-                            <a ng-class="{selected: status === ''} " href="#/">All</a>
-                        </li>
-                        <li>
-                            <a ng-class="{selected: status === 'active'}" href="#/active">Active</a>
-                        </li>
-                        <li>
-                            <a ng-class="{selected: status === 'completed'}" href="#/completed">Completed</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="column is-2">
-                    <a id="clear-completed" class="button is-success is-outlined" ng-click="orderService.clearCompletedOrders()" ng-show="completedCount">Clear completed</a>
+                <div flex>
+                    <md-button id="clear-completed" class="btn--pink md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear completed</md-button>
                 </div>
             </div>
-        </div>
     </section>
 </section>
 <footer id="info">
-    <div class="container">
-        <div class="content has-text-centered">
-            <p>Create by @migacz1125</p>
-        </div>
+    <div layout="row" layout-align="center">
+        <p>Create by @migacz1125</p>
     </div>
 </footer>
