@@ -1,0 +1,14 @@
+{
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "angular": true
+  },
+  "rules": {
+    "camelcase": 2,
+    "quotes": [2, "single"],
+    "angular/di": [2, "function"]
+  },
+  "extends": "angular"
+}
