@@ -1,205 +1,209 @@
 /*global angular */
 
-angular.module('orders').service('OrderService', ['OrderStorage', function(OrderStorage) {
+angular
+	.module('orders')
+	.factory('OrderService', ['OrderStorage', OrderService]);
+
+function OrderService(OrderStorage) {
+	'use strict';
+
 	var newOrder = {completed: false, title: ''},
-		canceled = false;
+		canceled = false,
+		orders = [],
+		oldOrder = null,
 
-	this.oldOrder = null;
-	this.orders = [];
+		/**
+		 * Return is order editing canceled.
+		 *
+		 * @returns {boolean}
+		 */
+		isCanceled = function () {
+			return canceled;
+		},
 
-	this.remainingCount = null;
+		/**
+		 * @param {boolean} cancel
+		 */
+		setIsCanceled = function (cancel) {
+			canceled = cancel;
+		};
 
-	/**
-	 * Return is order editing canceled.
-	 *
-	 * @returns {boolean}
-	 */
-	this.isCanceled = function () {
-		return canceled;
-	};
+	return {
+		/**
+		 * Get new empty order object.
+		 *
+		 * @returns {{completed: boolean, title: string}}
+		 */
+		getNewOrder: function () {
+			return newOrder;
+		},
 
-	/**
-	 *
-	 * @param {boolean} cancel
-	 */
-	this.setIsCanceled = function (cancel) {
-		canceled = cancel;
-	};
+		/**
+		 * Load orders collection from backend data.
+		 *
+		 * @returns {Array}
+		 */
+		loadOrders: function () {
+			return OrderStorage.get().then(function (ordersCollection) {
+				orders = ordersCollection;
 
-	/**
-	 * Get new order object.
-	 *
-	 * @returns {{completed: boolean, title: string}}
-	 */
-	this.getNewOrder = function () {
-		return newOrder;
-	};
+				orders.map(function (item) {
+					item.isEditMode = false;
+				});
+				return ordersCollection;
+			}.bind(this));
+		},
 
-	/**
-	 * Load orders collection from backend data.
-	 *
-	 * @returns {Array}
-	 */
-	this.loadOrders = function() {
-		return OrderStorage.get().then(function (ordersCollection) {
-			this.orders = ordersCollection;
+		/**
+		 * Add new order item to collection.
+		 */
+		addOrder: function () {
+			if (!newOrder.title) {
+				return;
+			}
 
-			this.orders.map(function(item) {
-				item.isEditMode = false;
-			});
-			return ordersCollection;
-		}.bind(this));
-	};
-
-	/**
-	 * Add new order item to collection.
-	 */
-	this.addOrder = function() {
-		if (!newOrder.title) {
-			return;
-		}
-
-		OrderStorage.insert(newOrder).then(function success() {
+			OrderStorage.insert(newOrder).then(function success() {
 				newOrder = {completed: false, title: ''};
 			});
-	};
+		},
 
-	/**
-	 * Remove order item from collection.
-	 *
-	 * @param order
-	 */
-	this.removeOrder = function (order) {
-		OrderStorage.delete(order);
-	};
+		/**
+		 * Remove order item from collection.
+		 *
+		 * @param order
+		 */
+		removeOrder: function (order) {
+			OrderStorage.delete(order);
+		},
 
-	/**
-	 * Remove all completed orders from collection.
-	 */
-	this.clearCompletedOrders = function () {
-		OrderStorage.clearCompleted();
-	};
+		/**
+		 * Remove all completed orders from collection.
+		 */
+		clearCompletedOrders: function () {
+			OrderStorage.clearCompleted();
+		},
 
-	/**
-	 * Update data about target order in collection.
-	 *
-	 * @param {Object} order
-	 */
-	this.updateOrder = function (order) {
-		OrderStorage.put(order).then(function success() {
+		/**
+		 * Update data about target order in collection.
+		 *
+		 * @param {Object} order
+		 */
+		updateOrder: function (order) {
+			OrderStorage.put(order).then(function success() {
 
-		}, function error() {});
-	};
+			}, function error() {
+			});
+		},
 
-	/**
-	 * Assign old value of order item during editing.
-	 *
-	 * @param {Object} order
-	 */
-	this.editOrder = function ($event, order) {
-		$event.stopPropagation();
+		/**
+		 * Assign old value of order item during editing.
+		 *
+		 * @param {Object} order
+		 */
+		editOrder: function ($event, order) {
+			$event.stopPropagation();
 
-		order.isEditMode = true;
-		this.oldOrder = angular.extend({}, order);
-	};
+			order.isEditMode = true;
+			oldOrder = angular.extend({}, order);
+		},
 
-	/**
-	 * If user press 'Esc' key during editing item.
-	 *
-	 * @param {Object} order
-	 */
-	this.revertEdits = function ($event, order) {
-		$event.stopPropagation();
+		/**
+		 * If user press 'Esc' key during editing item.
+		 *
+		 * @param {Object} order
+		 */
+		revertEdits: function ($event, order) {
+			$event.stopPropagation();
 
-		order.title = this.oldOrder.title;
-		order.isEditMode = false;
-
-		this.updateOrder(order);
-		this.oldOrder = null;
-		this.setIsCanceled(true);
-	};
-
-
-	/**
-	 * Save order item after editing.
-	 *
-	 * @param {Object} order
-	 */
-	this.saveEdits = function ($event, order) {
-		$event.stopPropagation();
-
-		if (this.isCanceled()) {
-			this.setIsCanceled(false);
-			return;
-		}
-
-		if (order.title === this.oldOrder.title) {
+			order.title = oldOrder.title;
 			order.isEditMode = false;
-			return;
-		}
 
-		if (order.title) {
 			this.updateOrder(order);
-		} else {
-			this.removeOrder(order);
-		}
+			oldOrder = null;
+			setIsCanceled(true);
+		},
 
-		order.isEditMode = false;
-	};
+		/**
+		 * Save order item after editing.
+		 *
+		 * @param {Object} order
+		 */
+		saveEdits: function ($event, order) {
+			$event.stopPropagation();
 
-	/**
-	 * Mark all order item as completed or uncompleted by arg value.
-	 *
-	 * @param {boolean} isCompletedAll
-	 */
-	this.markAll = function (isCompletedAll) {
-		if (isCompletedAll) {
-			this.orders.forEach(function (order) {
-				order.completed = false;
+			if (isCanceled()) {
+				setIsCanceled(false);
+				return;
+			}
+
+			if (order.title === oldOrder.title) {
+				order.isEditMode = false;
+				return;
+			}
+
+			if (order.title) {
 				this.updateOrder(order);
-			}, this);
-		} else {
-			this.orders.forEach(function (order) {
-				if (!order.completed) {
-					order.completed = true;
+			} else {
+				this.removeOrder(order);
+			}
+
+			order.isEditMode = false;
+		},
+
+		/**
+		 * Mark all order item as completed or uncompleted by arg value.
+		 *
+		 * @param {boolean} isCompletedAll
+		 */
+		markAll: function (isCompletedAll) {
+			if (isCompletedAll) {
+				orders.forEach(function (order) {
+					order.completed = false;
 					this.updateOrder(order);
-				}
-			}, this);
+				}, this);
+			} else {
+				orders.forEach(function (order) {
+					if (!order.completed) {
+						order.completed = true;
+						this.updateOrder(order);
+					}
+				}, this);
+			}
+		},
+
+		/**
+		 * Check that all orders item are completed.
+		 *
+		 * @returns {boolean}
+		 */
+		isAllOrderCompleted: function () {
+			var ordersCompleted = orders.filter(function (order) {
+				return (order.completed === true);
+			});
+
+			return (ordersCompleted.length === orders.length);
+		},
+
+		/**
+		 * Return number of active orders.
+		 *
+		 * @returns {Number}
+		 */
+		getNumOfActive: function () {
+			return orders.filter(function (order) {
+				return (order.completed === false);
+			}).length;
+		},
+
+		/**
+		 * Return number of active orders.
+		 *
+		 * @returns {Number}
+		 */
+		getNumOfCompleted: function () {
+			return orders.filter(function (order) {
+				return (order.completed === true);
+			}).length;
 		}
 	};
-
-	/**
-	 * Check that all orders item are completed.
-	 *
-	 * @returns {boolean}
-	 */
-	this.isAllOrderCompleted = function() {
-		var ordersCompleted = this.orders.filter(function(order) {
-			return (order.completed === true);
-		});
-
-		return (ordersCompleted.length === this.orders.length);
-	};
-
-	/**
-	 * Return number of active orders.
-	 *
-	 * @returns {Number}
-	 */
-	this.getNumOfActive = function() {
-		return this.orders.filter(function(order) {
-			return (order.completed === false);
-		}).length;
-	};
-
-	/**
-	 * Return number of active orders.
-	 *
-	 * @returns {Number}
-	 */
-	this.getNumOfCompleted = function() {
-		return this.orders.filter(function(order) {
-			return (order.completed === true);
-		}).length;
-	};
-}]);
+};

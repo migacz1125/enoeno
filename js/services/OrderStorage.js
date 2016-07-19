@@ -3,16 +3,21 @@
 /**
  * Service that persists and retrieves orders from local storage.
  */
-angular.module('orders').factory('OrderStorage', ['$q', function ($q) {
+angular
+	.module('orders')
+	.factory('OrderStorage', ['$q', OrderStorage]);
+
+function OrderStorage($q) {
 	'use strict';
 
 	var STORAGE_ID = 'orders-storage',
 		orders = [],
+
 		_getFromLocalStorage = function () {
-			return JSON.parse(localStorage.getItem(STORAGE_ID) || '[]');
+			return angular.fromJson(localStorage.getItem(STORAGE_ID) || '[]');
 		},
 		_saveToLocalStorage = function (todos) {
-			localStorage.setItem(STORAGE_ID, JSON.stringify(todos));
+			localStorage.setItem(STORAGE_ID, angular.toJson(todos));
 		};
 
 	return {
@@ -74,4 +79,4 @@ angular.module('orders').factory('OrderStorage', ['$q', function ($q) {
 			return deferred.promise;
 		}
 	};
-}]);
+};

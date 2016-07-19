@@ -13,9 +13,8 @@ angular.module('orders')
 		return function (scope, elem, attrs) {
 			elem.bind('keydown', function (event) {
 				if (event.keyCode === ESCAPE_KEY) {
-					//scope.$apply(attrs.todoEscape);
 					scope.$apply(function(){
-						scope.$eval(attrs.todoEscape);
+						scope.$eval(attrs.todoEscape, {$event : event});
 					});
 
 					event.preventDefault();
