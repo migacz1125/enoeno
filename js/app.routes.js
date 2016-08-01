@@ -5,14 +5,14 @@
  *
  * @type {angular.Module}
  */
-angular.module('orders.routes', ['ngRoute'])
-	.config(function ($routeProvider) {
+angular.module('orders.routes', ['ui.router'])
+	.config(function ($stateProvider, $urlRouterProvider) {
 		'use strict';
 
 		var routeConfig = {
-			controller: 'OrderListController',
-			controllerAs: 'OrderListCtrl',
+			url: '/',
 			templateUrl: 'js/templates/home.html',
+			controller: 'OrderListController as OrderListCtrl',
 			resolve: {
 				ordersData: function (OrderService) {
 					return OrderService.loadOrders();
@@ -20,10 +20,33 @@ angular.module('orders.routes', ['ngRoute'])
 			}
 		};
 
-		$routeProvider
-			.when('/', routeConfig)
-			.when('/:status', routeConfig)
-			.otherwise({
-				redirectTo: '/'
+		console.log('----- test -----');
+		$stateProvider
+			.state('all', routeConfig)
+			.state('active', {
+				url: '/:status',
+				templateUrl: 'js/templates/home.html',
+				controller: 'OrderListController as OrderListCtrl',
+				resolve: {
+					ordersData: function (OrderService) {
+						return OrderService.loadOrders();
+					}
+				}
+			})
+			.state('completed', {
+				url: '/:status',
+				templateUrl: 'js/templates/home.html',
+				controller: 'OrderListController as OrderListCtrl',
+				resolve: {
+					ordersData: function (OrderService) {
+						return OrderService.loadOrders();
+					}
+				}
 			});
+
+			//.state('active', routeConfig)
+			//.state('completed', routeConfig);
+			//.state('/:status', routeConfig);
+
+		$urlRouterProvider.otherwise('/');
 	});

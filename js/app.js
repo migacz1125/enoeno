@@ -1,1 +1,1 @@
-angular.module('orders', ['ngRoute', 'orders.routes', 'ngMaterial']);
+angular.module('orders', ['ngRoute', 'ui.router', 'orders.routes', 'ngMaterial']);

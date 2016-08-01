@@ -44,9 +44,10 @@ function OrderService(OrderStorage) {
 		 * @returns {Array}
 		 */
 		loadOrders: function () {
+			console.log('----- OrderService:loadOrders');
 			return OrderStorage.get().then(function (ordersCollection) {
 				orders = ordersCollection;
-
+				console.log('----- orders: ', orders);
 				orders.map(function (item) {
 					item.isEditMode = false;
 				});
