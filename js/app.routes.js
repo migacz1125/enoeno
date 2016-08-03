@@ -9,25 +9,61 @@ angular.module('orders.routes', ['ui.router'])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		'use strict';
 
-		var routeConfig = {
-			url: '/',
-			templateUrl: 'js/templates/home.html',
-			controller: 'OrderListController as OrderListCtrl',
-			resolve: {
-				ordersData: function (OrderService) {
-					return OrderService.loadOrders();
-				}
+		var loginRequired = function($q, $auth, $location) {
+			var deferred = $q.defer();
+			console.log('----- loginRequired$auth.isAuthenticated: ', $auth.isAuthenticated());
+			if ($auth.isAuthenticated()) {
+				deferred.resolve();
+			} else {
+				$location.path('/login');
 			}
+			return deferred.promise;
 		};
 
-		console.log('----- test -----');
+		/**
+		 * Helper auth functions
+		 */
+		var skipIfLoggedIn = function($q, $auth) {
+
+			var deferred = $q.defer();
+			if ($auth.isAuthenticated()) {
+				deferred.reject();
+			} else {
+				deferred.resolve();
+			}
+
+			return deferred.promise;
+		};
+
+		/**
+		 * Routs definitions.
+		 */
 		$stateProvider
-			.state('all', routeConfig)
+			.state('all', {
+				url: '/',
+				templateUrl: 'js/templates/home.html',
+				controller: 'OrderListController as OrderListCtrl',
+				resolve: {
+					loginRequired: loginRequired,
+					ordersData: function (OrderService) {
+						return OrderService.loadOrders();
+					}
+				}
+			})
+			.state('login', {
+				url: '/login',
+				templateUrl: 'js/templates/login.html',
+				controller: 'LoginController as LoginCtrl',
+				resolve: {
+					skipIfLoggedIn: skipIfLoggedIn
+				}
+			})
 			.state('active', {
 				url: '/:status',
 				templateUrl: 'js/templates/home.html',
 				controller: 'OrderListController as OrderListCtrl',
 				resolve: {
+					loginRequired: loginRequired,
 					ordersData: function (OrderService) {
 						return OrderService.loadOrders();
 					}
@@ -38,15 +74,12 @@ angular.module('orders.routes', ['ui.router'])
 				templateUrl: 'js/templates/home.html',
 				controller: 'OrderListController as OrderListCtrl',
 				resolve: {
+					loginRequired: loginRequired,
 					ordersData: function (OrderService) {
 						return OrderService.loadOrders();
 					}
 				}
 			});
-
-			//.state('active', routeConfig)
-			//.state('completed', routeConfig);
-			//.state('/:status', routeConfig);
 
 		$urlRouterProvider.otherwise('/');
 	});

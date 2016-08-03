@@ -7,21 +7,43 @@ angular
 	.module('orders')
 	.controller('LoginController', [
 		'$scope',
+		'$location',
+		'$auth',
 		LoginCtrl
 	]);
 
-function LoginCtrl($scope) {
+function LoginCtrl($scope, $location, $auth) {
 	'use strict';
 
 	console.log('------ LoginCtrl');
 
-	var vm = this,
-		TAP_COMPLETED = 'completed',
-		TAP_ACTIVE = 'active';
+	var vm = this;
+
+	$scope.login = function() {
+		$auth.login($scope.user)
+			.then(function() {
+				//toastr.success('You have successfully signed in!');
+				console.log('----- login success !!!');
+				$location.path('/');
+			})
+			.catch(function(error) {
+				//toastr.error(error.data.message, error.status);
+				console.log('----- login error: ', error);
+			});
+	};
 
 	$scope.authenticate = function(provider) {
 		console.log('------ loginCtrl:authenticate');
-		//$auth.authenticate(provider);
+		console.log('------ loginCtrl:authenticate:provider: ', provider);
+
+		$auth.authenticate(provider)
+			.then(function() {
+				console.log('----- authenticate success !');
+				$location.path('/');
+			})
+			.catch(function(error) {
+				console.log('----- authenticate error: ', error);
+			});
 	};
 
 	/**

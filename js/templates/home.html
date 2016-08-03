@@ -15,12 +15,12 @@
                            ng-class="{selected: OrderListCtrl.status === ''}"
                            ui-sref="all" >All
                 </md-button>
-                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === OrderListCtrl.TAP_ACTIVE}"
-                           ng-class="{selected: OrderListCtrl.status === OrderListCtrl.TAP_ACTIVE}"
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.isActiveTap()}"
+                           ng-class="{selected: OrderListCtrl.isActiveTap()}"
                            ui-sref="active({status: 'active'})">Active
                 </md-button>
-                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === OrderListCtrl.TAP_COMPLETED}"
-                           ng-class="{selected: OrderListCtrl.status === OrderListCtrl.TAP_COMPLETED}"
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.isCompletedTap()}"
+                           ng-class="{selected: OrderListCtrl.isCompletedTap()}"
                            ui-sref="completed({status: 'completed'})">Completed
                 </md-button>
             </div>

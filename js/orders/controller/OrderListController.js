@@ -42,9 +42,10 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData) {
 	 */
 	$scope.$on('$stateChangeSuccess', function () {
 		console.log('------ OrderListController:$stateChangeSuccess');
-		console.log('------ $stateParams.status: ', $stateParams.status);
 
 		vm.status = $stateParams.status || '';
+		console.log('----- vm.status: ', vm.status);
+
 		vm.statusFilter = (vm.status === TAP_ACTIVE) ?
 			{ completed: false } : (vm.status === TAP_COMPLETED) ?
 			{ completed: true } : {};
@@ -57,4 +58,19 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData) {
 		vm = null;
 		$scope = null;
 	});
+
+	/**
+	 * @returns {boolean}
+	 */
+	vm.isActiveTap = function() {
+		return (vm.status === TAP_ACTIVE);
+	};
+
+	/**
+	 * @returns {boolean}
+	 */
+	vm.isCompletedTap = function() {
+		return (vm.status === TAP_COMPLETED);
+	};
+
 }

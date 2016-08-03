@@ -1,11 +1,11 @@
 var gulp = require('gulp'),
-	webserver = require('gulp-webserver'),
 	eslint = require('gulp-eslint'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	ngAnnotate = require('gulp-ng-annotate'),
 	sourcemaps = require('gulp-sourcemaps'),
-	karmaServer = require('karma').Server;
+	karmaServer = require('karma').Server,
+	connect = require('gulp-connect');
 
 gulp.task('check-style', function() {
 	return gulp.src('js/**/*.js')
@@ -29,14 +29,11 @@ gulp.task('concat-src', function () {
 		.pipe(gulp.dest('.'));
 });
 
-gulp.task('webserver', function() {
-	gulp.src('')
-		.pipe(webserver({
-			fallback: './index.html',
-			livereload: false,
-			directoryListing: true,
-			open: true
-		}));
+gulp.task('connect', function() {
+	connect.server({
+		port: 8000,
+		fallback: 'index-dev.html'
+	});
 });
 
 /**
