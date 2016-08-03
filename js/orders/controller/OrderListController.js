@@ -10,10 +10,12 @@ angular
 		'$stateParams',
 		'OrderService',
 		'ordersData',
+		'$auth',
+		'AccountService',
 		OrderListCtrl
 	]);
 
-function OrderListCtrl($scope, $stateParams, OrderService, ordersData) {
+function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, AccountService) {
 	'use strict';
 
 	console.log('------ OrderListController:init');
@@ -73,4 +75,23 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData) {
 		return (vm.status === TAP_COMPLETED);
 	};
 
+	vm.isAuthenticated = function() {
+		return $auth.isAuthenticated();
+	};
+
+	vm.getUserData = function () {
+		console.log('====== getUserData');
+		AccountService.getProfile()
+			.then(function(response) {
+				//$scope.user = response.data;
+				console.log('----- response.data: ', response.data);
+				vm.user = response.data;
+			})
+			.catch(function(response) {
+				//toastr.error(response.data.message, response.status);
+				console.log('----- response.error.status: ', response.status);
+			});
+	};
+
+	vm.getUserData();
 }

@@ -39,6 +39,19 @@ angular.module('orders.routes', ['ui.router'])
 		 * Routs definitions.
 		 */
 		$stateProvider
+			.state('login', {
+				url: '/login',
+				templateUrl: 'js/templates/login.html',
+				controller: 'LoginController as LoginCtrl',
+				resolve: {
+					skipIfLoggedIn: skipIfLoggedIn
+				}
+			})
+			.state('logout', {
+				url: '/logout',
+				template: null,
+				controller: 'LogoutController as LogoutCtrl'
+			})
 			.state('all', {
 				url: '/',
 				templateUrl: 'js/templates/home.html',
@@ -48,14 +61,6 @@ angular.module('orders.routes', ['ui.router'])
 					ordersData: function (OrderService) {
 						return OrderService.loadOrders();
 					}
-				}
-			})
-			.state('login', {
-				url: '/login',
-				templateUrl: 'js/templates/login.html',
-				controller: 'LoginController as LoginCtrl',
-				resolve: {
-					skipIfLoggedIn: skipIfLoggedIn
 				}
 			})
 			.state('active', {
