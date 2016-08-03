@@ -1,5 +1,10 @@
 # TakewayApp
 
+## Run app
+* clone git repository
+* npm install
+*
+
 ## System requirments
 * Node.js
 * MongoDB
