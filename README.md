@@ -1,4 +1,4 @@
-# TakewayApp
+# TakeawayApp
 
 ## Run app
 * clone git repository
