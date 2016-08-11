@@ -4,14 +4,13 @@
             <h1 class="md-display-1">Takeaway App</h1>
         </div>
         <div layout="row" layout-align="space-between center" ng-if="OrderListCtrl.isAuthenticated()">
-
-            <!--<img ng-src="{{OrderListCtrl.user.picture}}?25" class="md-avatar" alt="{{OrderListCtrl.user.displayName}}" />-->
-            <div>Hello: {{OrderListCtrl.user.displayName}}</div>
-            <div>
-                <md-button ui-sref="logout">
-                    <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
-                </md-button>
-            </div>
+            <md-list-item class="noright">
+                <img alt="{{ OrderListCtrl.user.displayName }}" ng-src="{{ OrderListCtrl.user.picture }}" class="md-avatar" />
+                <p>{{ OrderListCtrl.user.displayName }}</p>
+            </md-list-item>
+            <md-button ui-sref="logout">
+                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+            </md-button>
         </div>
         <div layout="row" layout-align="center center" class="md-padding">
             <form flex id="todo-form" ng-submit="OrderListCtrl.orderService.addOrder()">

@@ -11,7 +11,6 @@ angular.module('orders.routes', ['ui.router'])
 
 		var loginRequired = function($q, $auth, $location) {
 			var deferred = $q.defer();
-			console.log('----- loginRequired$auth.isAuthenticated: ', $auth.isAuthenticated());
 			if ($auth.isAuthenticated()) {
 				deferred.resolve();
 			} else {

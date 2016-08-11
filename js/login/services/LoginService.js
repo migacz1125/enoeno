@@ -17,7 +17,6 @@ function LoginService(OrderStorage) {
 		isCanceled = function () {
 			return true;
 		}
-	//console.log('----- scope.user: ', $scope.user);
 	return {
 		/**
 		 * Get new empty order object.
@@ -33,15 +32,6 @@ function LoginService(OrderStorage) {
 		 *
 		 * @returns {Array}
 		 */
-		loadOrders: function () {
-			//return OrderStorage.get().then(function (ordersCollection) {
-			//	orders = ordersCollection;
-			//
-			//	orders.map(function (item) {
-			//		item.isEditMode = false;
-			//	});
-			//	return ordersCollection;
-			//}.bind(this));
-		}
+		loadOrders: function () {}
 	};
 };

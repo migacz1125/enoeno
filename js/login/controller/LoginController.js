@@ -14,36 +14,25 @@ angular
 
 function LoginCtrl($scope, $location, $auth) {
 	'use strict';
-
-	console.log('------ LoginCtrl');
-
 	var vm = this;
 
-	$scope.login = function() {
+	vm.login = function() {
 		$auth.login($scope.user)
 			.then(function() {
 				//toastr.success('You have successfully signed in!');
-				console.log('----- login success !!!');
 				$location.path('/');
 			})
 			.catch(function(error) {
 				//toastr.error(error.data.message, error.status);
-				console.log('----- login error: ', error);
 			});
 	};
 
-	$scope.authenticate = function(provider) {
-		console.log('------ loginCtrl:authenticate');
-		console.log('------ loginCtrl:authenticate:provider: ', provider);
-
+	vm.authenticate = function(provider) {
 		$auth.authenticate(provider)
 			.then(function() {
-				console.log('----- authenticate success !');
 				$location.path('/');
 			})
-			.catch(function(error) {
-				console.log('----- authenticate error: ', error);
-			});
+			.catch(function(error) {});
 	};
 
 	/**

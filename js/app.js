@@ -1,10 +1,10 @@
 angular.module('orders', ['ngRoute', 'ui.router', 'satellizer', 'ngMaterial', 'orders.routes'])
-	.config(function($authProvider) {
+	.config(function($authProvider, $windowProvider) {
 		'use strict';
 		$authProvider.github({
 			clientId: '3532eda80a0f3b9f16a1',
 			authorizationEndpoint: 'https://github.com/login/oauth/authorize',
-			redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
+			redirectUri: $windowProvider.$get().location.origin || $windowProvider.$get().location.protocol + '//' + $windowProvider.$get().location.host,
 			optionalUrlParams: ['scope'],
 			scope: ['user:email'],
 			scopeDelimiter: ' ',
@@ -16,7 +16,7 @@ angular.module('orders', ['ngRoute', 'ui.router', 'satellizer', 'ngMaterial', 'o
 			name: 'foursquare',
 			url: '/auth/foursquare',
 			clientId: 'MTCEJ3NGW2PNNB31WOSBFDSAD4MTHYVAZ1UKIULXZ2CVFC2K',
-			redirectUri: window.location.origin || window.location.protocol + '//' + window.location.host,
+			redirectUri: $windowProvider.$get().location.origin || $windowProvider.$get().location.protocol + '//' + $windowProvider.$get().location.host,
 			authorizationEndpoint: 'https://foursquare.com/oauth2/authenticate'
 		});
 

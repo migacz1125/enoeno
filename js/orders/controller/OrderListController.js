@@ -18,8 +18,6 @@ angular
 function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, AccountService) {
 	'use strict';
 
-	console.log('------ OrderListController:init');
-
 	var vm = this,
 		TAP_COMPLETED = 'completed',
 		TAP_ACTIVE = 'active';
@@ -32,8 +30,6 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, Ac
 	 * Listener to all changes om orders.
 	 */
 	$scope.$watch('OrderListCtrl.orders', function () {
-		console.log('----- change orders !');
-
 		vm.remainingCount = OrderService.getNumOfActive();
 		vm.completedCount = OrderService.getNumOfCompleted();
 		vm.isAllCompleted = OrderService.isAllOrderCompleted();
@@ -43,10 +39,7 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, Ac
 	 * Monitor the current route for changes and adjust the filter accordingly.
 	 */
 	$scope.$on('$stateChangeSuccess', function () {
-		console.log('------ OrderListController:$stateChangeSuccess');
-
 		vm.status = $stateParams.status || '';
-		console.log('----- vm.status: ', vm.status);
 
 		vm.statusFilter = (vm.status === TAP_ACTIVE) ?
 			{ completed: false } : (vm.status === TAP_COMPLETED) ?
@@ -80,17 +73,11 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, Ac
 	};
 
 	vm.getUserData = function () {
-		console.log('====== getUserData');
 		AccountService.getProfile()
 			.then(function(response) {
-				//$scope.user = response.data;
-				console.log('----- response.data: ', response.data);
 				vm.user = response.data;
 			})
-			.catch(function(response) {
-				//toastr.error(response.data.message, response.status);
-				console.log('----- response.error.status: ', response.status);
-			});
+			.catch(function(response) {});
 	};
 
 	vm.getUserData();

@@ -15,7 +15,6 @@ angular
 function LogoutCtrl($scope, $location, $auth) {
 	'use strict';
 
-	console.log('------ LogoutCtrl');
 	var vm = this;
 
 	if (!$auth.isAuthenticated()) { return; }
@@ -23,7 +22,6 @@ function LogoutCtrl($scope, $location, $auth) {
 	$auth.logout()
 		.then(function() {
 			//toastr.info('You have been logged out');
-			console.log('===== user logout !');
 			$location.path('/');
 		});
 

@@ -1,3 +1,5 @@
+'use-strict';
+
 var gulp = require('gulp'),
 	eslint = require('gulp-eslint'),
 	concat = require('gulp-concat'),
@@ -5,8 +7,12 @@ var gulp = require('gulp'),
 	ngAnnotate = require('gulp-ng-annotate'),
 	sourcemaps = require('gulp-sourcemaps'),
 	karmaServer = require('karma').Server,
-	connect = require('gulp-connect');
+	connect = require('gulp-connect'),
+	exec = require('child_process').exec;
 
+/**
+ * Run eslint on source code to check code style.
+ */
 gulp.task('check-style', function() {
 	return gulp.src('js/**/*.js')
 		.pipe(eslint())
@@ -18,7 +24,9 @@ gulp.task('check-style', function() {
 		.pipe(eslint.failAfterError());
 });
 
-
+/**
+ * concat and uglify source code to one file.
+ */
 gulp.task('concat-src', function () {
 	gulp.src(['js/**/*.js'])
 		.pipe(sourcemaps.init())
@@ -29,10 +37,14 @@ gulp.task('concat-src', function () {
 		.pipe(gulp.dest('.'));
 });
 
+/**
+ * Run webserver to run app.
+ */
 gulp.task('connect', function() {
 	connect.server({
+		name: 'Takeaway App',
 		port: 8000,
-		fallback: 'index-dev.html'
+		fallback: 'index.html'
 	});
 });
 
@@ -46,6 +58,23 @@ gulp.task('test', function (done) {
 	}, done).start();
 });
 
+gulp.task('node-server', function (cb) {
+	exec('mongod --dbpath ./data', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	});
+	exec('node server/node/server.js', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	});
+});
+
 gulp.task('build', ['check-style', 'test', 'concat-src'], function() {
 	// This will only run if is successful...
+});
+
+gulp.task('start', ['build', 'connect', 'node-server'], function () {
+
 });
