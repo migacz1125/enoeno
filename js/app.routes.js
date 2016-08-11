@@ -51,39 +51,36 @@ angular.module('orders.routes', ['ui.router'])
 				template: null,
 				controller: 'LogoutController as LogoutCtrl'
 			})
-			.state('all', {
+			.state('home', {
+				url: '',
+				views: {
+					'': {
+						templateUrl: './js/templates/home.html',
+						controller: 'OrderListController as OrderListCtrl',
+						resolve: {
+							loginRequired: loginRequired,
+							ordersData: function (OrderService) {
+								return OrderService.loadOrders();
+							}
+						}
+					},
+					'top@home': {
+						templateUrl: './js/templates/top.html'
+					}
+				}
+			})
+			.state('home.list', {
 				url: '/',
-				templateUrl: 'js/templates/home.html',
-				controller: 'OrderListController as OrderListCtrl',
-				resolve: {
-					loginRequired: loginRequired,
-					ordersData: function (OrderService) {
-						return OrderService.loadOrders();
-					}
-				}
+				templateUrl: './js/templates/order-list.html'
 			})
-			.state('active', {
+			.state('home.active', {
 				url: '/:status',
-				templateUrl: 'js/templates/home.html',
-				controller: 'OrderListController as OrderListCtrl',
-				resolve: {
-					loginRequired: loginRequired,
-					ordersData: function (OrderService) {
-						return OrderService.loadOrders();
-					}
-				}
+				templateUrl: './js/templates/order-list.html'
 			})
-			.state('completed', {
+			.state('home.completed', {
 				url: '/:status',
-				templateUrl: 'js/templates/home.html',
-				controller: 'OrderListController as OrderListCtrl',
-				resolve: {
-					loginRequired: loginRequired,
-					ordersData: function (OrderService) {
-						return OrderService.loadOrders();
-					}
-				}
+				templateUrl: './js/templates/order-list.html'
 			});
 
-		$urlRouterProvider.otherwise('/');
+		$urlRouterProvider.otherwise('');
 	});

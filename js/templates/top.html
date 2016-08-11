@@ -1,0 +1,19 @@
+ <header class="header">
+    <div layout="row" layout-align="center center">
+        <h1 class="md-display-1">Takeaway App</h1>
+    </div>
+    <div layout="row" layout-align="space-between center" ng-if="OrderListCtrl.isAuthenticated()">
+        <md-list-item class="noright">
+            <img alt="{{ OrderListCtrl.user.displayName }}" ng-src="{{ OrderListCtrl.user.picture }}" class="md-avatar" />
+            <p>{{ OrderListCtrl.user.displayName }}</p>
+        </md-list-item>
+        <md-button ui-sref="logout">
+            <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+        </md-button>
+    </div>
+    <div layout="row" layout-align="center center" class="md-padding">
+        <form flex id="todo-form" ng-submit="OrderListCtrl.orderService.addOrder()">
+            <input class="width--100" id="new-order" type="text" placeholder="What You will to order ?" ng-model="OrderListCtrl.orderService.getNewOrder().title" autofocus>
+        </form>
+    </div>
+</header>
