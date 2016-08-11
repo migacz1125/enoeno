@@ -7,13 +7,15 @@ angular
 	.module('orders')
 	.controller('OrderListController', [
 		'$scope',
-		'$routeParams',
+		'$stateParams',
 		'OrderService',
 		'ordersData',
+		'$auth',
+		'AccountService',
 		OrderListCtrl
 	]);
 
-function OrderListCtrl($scope, $routeParams, OrderService, ordersData) {
+function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, AccountService) {
 	'use strict';
 
 	var vm = this,
@@ -36,8 +38,9 @@ function OrderListCtrl($scope, $routeParams, OrderService, ordersData) {
 	/**
 	 * Monitor the current route for changes and adjust the filter accordingly.
 	 */
-	$scope.$on('$routeChangeSuccess', function () {
-		vm.status = $routeParams.status || '';
+	$scope.$on('$stateChangeSuccess', function () {
+		vm.status = $stateParams.status || '';
+
 		vm.statusFilter = (vm.status === TAP_ACTIVE) ?
 			{ completed: false } : (vm.status === TAP_COMPLETED) ?
 			{ completed: true } : {};
@@ -50,4 +53,32 @@ function OrderListCtrl($scope, $routeParams, OrderService, ordersData) {
 		vm = null;
 		$scope = null;
 	});
+
+	/**
+	 * @returns {boolean}
+	 */
+	vm.isActiveTap = function() {
+		return (vm.status === TAP_ACTIVE);
+	};
+
+	/**
+	 * @returns {boolean}
+	 */
+	vm.isCompletedTap = function() {
+		return (vm.status === TAP_COMPLETED);
+	};
+
+	vm.isAuthenticated = function() {
+		return $auth.isAuthenticated();
+	};
+
+	vm.getUserData = function () {
+		AccountService.getProfile()
+			.then(function(response) {
+				vm.user = response.data;
+			})
+			.catch(function(response) {});
+	};
+
+	vm.getUserData();
 }

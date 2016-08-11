@@ -1,7 +1,16 @@
 <section id="todoapp" class="section">
     <header class="header">
         <div layout="row" layout-align="center center">
-            <h1 class="md-display-1">Order meal</h1>
+            <h1 class="md-display-1">Takeaway App</h1>
+        </div>
+        <div layout="row" layout-align="space-between center" ng-if="OrderListCtrl.isAuthenticated()">
+            <md-list-item class="noright">
+                <img alt="{{ OrderListCtrl.user.displayName }}" ng-src="{{ OrderListCtrl.user.picture }}" class="md-avatar" />
+                <p>{{ OrderListCtrl.user.displayName }}</p>
+            </md-list-item>
+            <md-button ui-sref="logout">
+                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+            </md-button>
         </div>
         <div layout="row" layout-align="center center" class="md-padding">
             <form flex id="todo-form" ng-submit="OrderListCtrl.orderService.addOrder()">
@@ -13,15 +22,15 @@
             <div id="filters" layout="row" layout-align="center center">
                 <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === ''}"
                            ng-class="{selected: OrderListCtrl.status === ''}"
-                           ng-href="#/" >All
+                           ui-sref="all" >All
                 </md-button>
-                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === OrderListCtrl.TAP_ACTIVE}"
-                           ng-class="{selected: OrderListCtrl.status === OrderListCtrl.TAP_ACTIVE}"
-                           ng-href="#/active">Active
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.isActiveTap()}"
+                           ng-class="{selected: OrderListCtrl.isActiveTap()}"
+                           ui-sref="active({status: 'active'})">Active
                 </md-button>
-                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === OrderListCtrl.TAP_COMPLETED}"
-                           ng-class="{selected: OrderListCtrl.status === OrderListCtrl.TAP_COMPLETED}"
-                           ng-href="#/completed">Completed
+                <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.isCompletedTap()}"
+                           ng-class="{selected: OrderListCtrl.isCompletedTap()}"
+                           ui-sref="completed({status: 'completed'})">Completed
                 </md-button>
             </div>
             <div id="todo-list" class="md-padding">

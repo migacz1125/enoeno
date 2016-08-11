@@ -9,7 +9,7 @@ function OrderService(OrderStorage) {
 
 	var newOrder = {completed: false, title: ''},
 		canceled = false,
-		orders = [],
+		orders = null,
 		oldOrder = null,
 
 		/**
@@ -44,9 +44,12 @@ function OrderService(OrderStorage) {
 		 * @returns {Array}
 		 */
 		loadOrders: function () {
+			if (orders !== null) {
+				return orders;
+			}
+
 			return OrderStorage.get().then(function (ordersCollection) {
 				orders = ordersCollection;
-
 				orders.map(function (item) {
 					item.isEditMode = false;
 				});
