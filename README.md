@@ -6,7 +6,7 @@
 * run MongoDB
 * run backend server: node server\node\server.js
 * run server: node_modules\.bin\gulp connect
-* put in browser: localhost:8000/index.html
+* put in browser: localhost:8000\index.html
 
 ## System requirments
 * Node.js
