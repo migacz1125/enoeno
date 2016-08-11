@@ -1,0 +1,49 @@
+<div>
+    <div id="todo-list" class="md-padding">
+        <md-checkbox ng-model="OrderListCtrl.isAllCompleted"
+                     ng-click="OrderListCtrl.orderService.markAll(OrderListCtrl.isAllCompleted)"
+                     ng-change="OrderListCtrl.isAllCompleted = !OrderListCtrl.isAllCompleted">
+            <span ng-show="OrderListCtrl.isAllCompleted">Un-</span>Select All
+        </md-checkbox>
+        <md-list>
+            <md-list-item ng-repeat="order in OrderListCtrl.orders | filter:OrderListCtrl.statusFilter track by $index">
+                <md-checkbox ng-attr-id="{{ 'order-' + $index }}"
+                             ng-model="order.completed"
+                             ng-change="OrderListCtrl.orderService.updateOrder(order)"
+                             ng-disabled="order.isEditMode"
+                             class="green">
+                </md-checkbox>
+                <div ng-if="!order.isEditMode">
+                    <p>{{order.title}}</p>
+                </div>
+                <div ng-if="order.isEditMode" layout="row">
+                    <form flex ng-submit="OrderListCtrl.orderService.saveEdits($event, order)">
+                        <input class="width--100" for="order.id" ng-trim="false"
+                               type="text"
+                               ng-model="order.title"
+                               todo-escape="OrderListCtrl.orderService.revertEdits($event, order)"
+                               ng-blur="OrderListCtrl.orderService.saveEdits($event, order)"
+                               ng-disabled="!order.isEditMode">
+                    </form>
+                </div>
+                <div ng-show="order.isEditMode" class="md-secondary">
+                    <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.saveEdits($event, order)">done</md-icon>
+                    <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.revertEdits($event, order)">clear</md-icon>
+                </div>
+                <div ng-show="!order.isEditMode" class="md-secondary">
+                    <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.editOrder($event, order)">mode_edit</md-icon>
+                    <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
+                </div>
+            </md-list-item>
+        </md-list>
+    </div>
+    <div layout="column" class="md-padding" layout-align="center center" ng-show="OrderListCtrl.orders.length" ng-cloak>
+        <div flex>
+            <strong>{{OrderListCtrl.remainingCount}}</strong>
+            <ng-pluralize count="OrderListCtrl.remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
+        </div>
+        <div flex>
+            <md-button id="clear-completed" class="btn--pink md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear completed</md-button>
+        </div>
+    </div>
+</div>
