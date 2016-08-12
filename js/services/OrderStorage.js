@@ -16,19 +16,19 @@ function OrderStorage($q) {
 		_getFromLocalStorage = function () {
 			return angular.fromJson(localStorage.getItem(STORAGE_ID) || '[]');
 		},
-		_saveToLocalStorage = function (todos) {
-			localStorage.setItem(STORAGE_ID, angular.toJson(todos));
+		_saveToLocalStorage = function (orders) {
+			localStorage.setItem(STORAGE_ID, angular.toJson(orders));
 		};
 
 	return {
 		clearCompleted: function () {
 			var deferred = $q.defer();
 
-			var incompleteTodos = orders.filter(function (todo) {
-				return !todo.completed;
+			var incompleteOrders = orders.filter(function (order) {
+				return !order.completed;
 			});
 
-			angular.copy(incompleteTodos, orders);
+			angular.copy(incompleteOrders, orders);
 
 			_saveToLocalStorage(orders);
 			deferred.resolve(orders);
@@ -36,10 +36,10 @@ function OrderStorage($q) {
 			return deferred.promise;
 		},
 
-		delete: function (todo) {
+		delete: function (order) {
 			var deferred = $q.defer();
 
-			orders.splice(orders.indexOf(todo), 1);
+			orders.splice(orders.indexOf(order), 1);
 
 			_saveToLocalStorage(orders);
 			deferred.resolve(orders);
@@ -57,10 +57,10 @@ function OrderStorage($q) {
 			return deferred.promise;
 		},
 
-		insert: function (todo) {
+		insert: function (order) {
 			var deferred = $q.defer();
 
-			orders.push(todo);
+			orders.push(order);
 
 			_saveToLocalStorage(orders);
 			deferred.resolve(orders);

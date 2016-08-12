@@ -65,7 +65,19 @@ angular.module('orders.routes', ['ui.router'])
 						}
 					},
 					'top@home': {
-						templateUrl: './js/templates/top.html'
+						templateUrl: './js/templates/top.html',
+						controller: 'OrderFromController as OrderFromCtrl',
+						resolve: {
+							loginRequired: loginRequired,
+							restaurantsData: function (RestaurantService) {
+								console.log('----- 1 -----');
+								return RestaurantService.loadRestaurant();
+							},
+							userData: function(AccountService) {
+								console.log('----- 2 -----');
+								return AccountService.getUserData();
+							}
+						}
 					}
 				}
 			})

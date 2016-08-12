@@ -60,12 +60,13 @@ function OrderService(OrderStorage) {
 		/**
 		 * Add new order item to collection.
 		 */
-		addOrder: function () {
+		addOrder: function (newOrderItem) {
+			console.log('---- OrderService:addOrder:newOrder: ', newOrderItem);
 			if (!newOrder.title) {
 				return;
 			}
 
-			OrderStorage.insert(newOrder).then(function success() {
+			OrderStorage.insert(newOrderItem).then(function success() {
 				newOrder = {completed: false, title: ''};
 			});
 		},
