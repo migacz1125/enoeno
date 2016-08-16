@@ -18,9 +18,6 @@ angular
 function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService) {
 	'use strict';
 
-	console.log('------ OrderFromCtrl:userData: ', userData);
-	console.log('------ OrderFromCtrl:restaurantsData: ', restaurantsData);
-
 	var vm = this;
 
 	vm.orderService = OrderService;
@@ -32,12 +29,9 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	vm.showRestaurantMenu = false;
 
 	/**
-	 * Listener to all changes om orders.
+	 * Listener to restaurant changes.
 	 */
 	$scope.$watch('OrderFromCtrl.selectedRestaurant', function () {
-//		vm.remainingCount = OrderService.getNumOfActive();
-//		vm.completedCount = OrderService.getNumOfCompleted();
-		console.log('--- OrderFromCtrl watch restaurant selected: ');
 		if (vm.selectedRestaurant !== null) {
 			//show additional select
 			vm.restaurantService.setSelectedRestaurant(vm.selectedRestaurant);
@@ -58,12 +52,12 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	};
 
 	vm.addOrder = function () {
-		console.log('----- FormCtrl:addOrder');
-		console.log('----- FormCtrl:addOrder:vm.selectedRestaurant: ', vm.selectedRestaurant);
-		console.log('----- FormCtrl:addOrder:vm.selectedMeal: ', vm.selectedMeal);
-
 		var order = OrderService.getNewOrder();
-		order.title = vm.selectedMeal.name;
+
+		order.userAvatar = vm.user.picture;
+		order.userName = vm.user.displayName;
+		order.title = vm.selectedRestaurant.name + ' - ' + vm.selectedMeal.name;
+		order.price = vm.selectedMeal.price;
 
 		OrderService.addOrder(order);
 	};

@@ -18,7 +18,6 @@ angular
 function OrderListCtrl($scope, OrderService, ordersData, $auth, $state, RestaurantService) {
 	'use strict';
 
-	console.log('------ OrderListCtrl');
 	var vm = this,
 		TAP_COMPLETED = 'completed',
 		TAP_ACTIVE = 'active';

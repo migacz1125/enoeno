@@ -70,11 +70,9 @@ angular.module('orders.routes', ['ui.router'])
 						resolve: {
 							loginRequired: loginRequired,
 							restaurantsData: function (RestaurantService) {
-								console.log('----- 1 -----');
 								return RestaurantService.loadRestaurant();
 							},
 							userData: function(AccountService) {
-								console.log('----- 2 -----');
 								return AccountService.getUserData();
 							}
 						}
