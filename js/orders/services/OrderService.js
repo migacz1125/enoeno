@@ -7,26 +7,14 @@ angular
 function OrderService(OrderStorage) {
 	'use strict';
 
-	var newOrder = {completed: false, title: ''},
-		canceled = false,
-		orders = null,
-		oldOrder = null,
-
-		/**
-		 * Return is order editing canceled.
-		 *
-		 * @returns {boolean}
-		 */
-		isCanceled = function () {
-			return canceled;
-		},
-
-		/**
-		 * @param {boolean} cancel
-		 */
-		setIsCanceled = function (cancel) {
-			canceled = cancel;
-		};
+	var newOrder = {
+		completed: false,
+		title: '',
+		userAvatar: '',
+		userName: '',
+		price:''
+	},
+		orders = null;
 
 	return {
 		/**
@@ -50,9 +38,6 @@ function OrderService(OrderStorage) {
 
 			return OrderStorage.get().then(function (ordersCollection) {
 				orders = ordersCollection;
-				orders.map(function (item) {
-					item.isEditMode = false;
-				});
 				return ordersCollection;
 			}.bind(this));
 		},
@@ -60,13 +45,31 @@ function OrderService(OrderStorage) {
 		/**
 		 * Add new order item to collection.
 		 */
-		addOrder: function () {
+		addOrder: function (newOrderItem) {
 			if (!newOrder.title) {
 				return;
 			}
 
-			OrderStorage.insert(newOrder).then(function success() {
-				newOrder = {completed: false, title: ''};
+			OrderStorage.insert(newOrderItem).then(function success() {
+				newOrder = {
+					completed: false,
+					title: '',
+					userAvatar: '',
+					userName: '',
+					price:''
+				};
+			});
+		},
+
+		/**
+		 * Update data about target order in collection.
+		 *
+		 * @param {Object} order
+		 */
+		updateOrder: function (order) {
+			OrderStorage.put(order).then(function success() {
+
+			}, function error() {
 			});
 		},
 
@@ -84,73 +87,6 @@ function OrderService(OrderStorage) {
 		 */
 		clearCompletedOrders: function () {
 			OrderStorage.clearCompleted();
-		},
-
-		/**
-		 * Update data about target order in collection.
-		 *
-		 * @param {Object} order
-		 */
-		updateOrder: function (order) {
-			OrderStorage.put(order).then(function success() {
-
-			}, function error() {
-			});
-		},
-
-		/**
-		 * Assign old value of order item during editing.
-		 *
-		 * @param {Object} order
-		 */
-		editOrder: function ($event, order) {
-			$event.stopPropagation();
-
-			order.isEditMode = true;
-			oldOrder = angular.extend({}, order);
-		},
-
-		/**
-		 * If user press 'Esc' key during editing item.
-		 *
-		 * @param {Object} order
-		 */
-		revertEdits: function ($event, order) {
-			$event.stopPropagation();
-
-			order.title = oldOrder.title;
-			order.isEditMode = false;
-
-			this.updateOrder(order);
-			oldOrder = null;
-			setIsCanceled(true);
-		},
-
-		/**
-		 * Save order item after editing.
-		 *
-		 * @param {Object} order
-		 */
-		saveEdits: function ($event, order) {
-			$event.stopPropagation();
-
-			if (isCanceled()) {
-				setIsCanceled(false);
-				return;
-			}
-
-			if (order.title === oldOrder.title) {
-				order.isEditMode = false;
-				return;
-			}
-
-			if (order.title) {
-				this.updateOrder(order);
-			} else {
-				this.removeOrder(order);
-			}
-
-			order.isEditMode = false;
 		},
 
 		/**

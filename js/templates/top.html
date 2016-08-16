@@ -2,18 +2,34 @@
     <div layout="row" layout-align="center center">
         <h1 class="md-display-1">Takeaway App</h1>
     </div>
-    <div layout="row" layout-align="space-between center" ng-if="OrderListCtrl.isAuthenticated()">
+    <div layout="row" layout-align="space-between center" ng-if="OrderFromCtrl.isAuthenticated()">
         <md-list-item class="noright">
-            <img alt="{{ OrderListCtrl.user.displayName }}" ng-src="{{ OrderListCtrl.user.picture }}" class="md-avatar" />
-            <p>{{ OrderListCtrl.user.displayName }}</p>
+            <img alt="{{ OrderFromCtrl.user.displayName }}" ng-src="{{ OrderFromCtrl.user.picture }}" class="md-avatar" />
+            <p>{{ OrderFromCtrl.user.displayName }} - What You will to order ?</p>
         </md-list-item>
         <md-button ui-sref="logout">
             <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
         </md-button>
     </div>
     <div layout="row" layout-align="center center" class="md-padding">
-        <form flex id="todo-form" ng-submit="OrderListCtrl.orderService.addOrder()">
-            <input class="width--100" id="new-order" type="text" placeholder="What You will to order ?" ng-model="OrderListCtrl.orderService.getNewOrder().title" autofocus>
+        <form id="new-order" layout="row" layout-align="center center" flex name="orderForm">
+            <md-input-container class="md-block">
+                <label>Restaurant</label>
+                <md-select placeholder="Select restaurant" ng-model="OrderFromCtrl.selectedRestaurant">
+                    <md-option ng-value="restaurant" ng-repeat="restaurant in OrderFromCtrl.restaurants">{{restaurant.name}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container ng-if="OrderFromCtrl.selectedRestaurant" class="md-block">
+                <label>Meal</label>
+                <md-select placeholder="Select meal" ng-model="OrderFromCtrl.selectedMeal">
+                    <md-option ng-value="meal" ng-repeat="meal in OrderListCtrl.restaurantService.getSelectedMenu()">{{meal.name}}, {{meal.price}} zł</md-option>
+                </md-select>
+            </md-input-container>
+
+            <div layout="row" layout-align="center center" class="md-margin">
+                <!--<md-button ng-click="clearValue()" ng-disabled="!myModel" style="margin-right: 20px;">Clear</md-button>-->
+                <md-button class="md-primary md-raised" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
+            </div>
         </form>
     </div>
 </header>

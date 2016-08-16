@@ -10,12 +10,12 @@ angular
 		'OrderService',
 		'ordersData',
 		'$auth',
-		'AccountService',
 		'$state',
+		'RestaurantService',
 		OrderListCtrl
 	]);
 
-function OrderListCtrl($scope, OrderService, ordersData, $auth, AccountService, $state) {
+function OrderListCtrl($scope, OrderService, ordersData, $auth, $state, RestaurantService) {
 	'use strict';
 
 	var vm = this,
@@ -25,7 +25,7 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, AccountService, 
 	vm.orderService = OrderService;
 	vm.isAllCompleted = OrderService.isAllOrderCompleted();
 	vm.orders = ordersData;
-	vm.user = null;
+	vm.restaurantService = RestaurantService;
 
 	/**
 	 * Listener to all changes om orders.
@@ -76,14 +76,4 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, AccountService, 
 	vm.isAuthenticated = function() {
 		return $auth.isAuthenticated();
 	};
-
-	vm.getUserData = function () {
-		AccountService.getProfile()
-			.then(function(response) {
-				vm.user = response.data;
-			})
-			.catch(function(response) {});
-	};
-
-	vm.getUserData();
 }
