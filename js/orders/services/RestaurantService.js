@@ -29,7 +29,6 @@ function RestaurantService(RestaurantStorage) {
 		},
 
 		getSelectedMenu: function () {
-//			console.log('------ getSelectedMenu:selectedRestaurant: ', selectedRestaurant);
 			return selectedRestaurant.menu;
 		},
 
@@ -44,7 +43,6 @@ function RestaurantService(RestaurantStorage) {
 		},
 
 		setSelectedRestaurant: function (selectedItem) {
-			console.log('===== setSelectedRestaurant:selectedItem: ', selectedItem);
 			selectedRestaurant = selectedItem;
 		},
 
