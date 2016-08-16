@@ -1,0 +1,6 @@
+{
+  "name": "Take-away-app",
+  "tagline": "",
+  "body": "# TakeawayApp\r\n\r\n## Run app\r\n* clone git repository\r\n* npm install\r\n* run MongoDB\r\n* run backend server: node server\\node\\server.js\r\n* run server: node_modules\\\\.bin\\gulp connect\r\n* put in browser: localhost:8000\\index.html\r\n\r\n## System requirments\r\n* Node.js\r\n* MongoDB (Windows installation: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)\r\n* \r\n\r\n## Frontend\r\n* AngularJS\r\n* Angular Material\r\n* Awsome Fonts\r\n* Satellizer\r\n\r\n## Backend\r\n* on Node.js server use express freamwork\r\n* \r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
