@@ -9,6 +9,7 @@
             <md-list-item ng-repeat="order in OrderListCtrl.orders | filter:OrderListCtrl.statusFilter track by $index">
                 <md-checkbox ng-attr-id="{{ 'order-' + $index }}"
                              ng-model="order.completed"
+                             ng-change="OrderListCtrl.orderService.updateOrder(order)"
                              class="green">
                 </md-checkbox>
                 <img alt="{{ person.name }}" ng-src="{{ order.userAvatar }}" class="md-avatar" />
