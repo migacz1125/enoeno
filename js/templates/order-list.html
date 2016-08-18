@@ -14,17 +14,17 @@
                 </md-checkbox>
                 <img alt="{{ person.name }}" ng-src="{{ order.userAvatar }}" class="md-avatar" />
                 <p>{{order.title}} - {{order.price}} zł</p>
-                <md-icon class="material-icons" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
+                <md-icon class="material-icons" ng-show="OrderListCtrl.orderService.isOrderActive()" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
             </md-list-item>
         </md-list>
     </div>
     <div layout="column" class="md-padding" layout-align="center center" ng-show="OrderListCtrl.orders.length" ng-cloak>
         <div flex>
             <strong>{{OrderListCtrl.remainingCount}}</strong>
-            <ng-pluralize count="OrderListCtrl.remainingCount" when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
+            <ng-pluralize count="OrderListCtrl.remainingCount" when="{ one: 'order left', other: 'orders left' }"></ng-pluralize>
         </div>
         <div flex>
-            <md-button id="clear-completed" class="btn--pink md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear completed</md-button>
+            <md-button id="clear-completed" class="btn--pink md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear delivered</md-button>
         </div>
     </div>
 </div>
