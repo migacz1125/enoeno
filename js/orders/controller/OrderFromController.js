@@ -24,20 +24,7 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	vm.restaurants = restaurantsData;
 	vm.user = userData;
 	vm.restaurantService = RestaurantService;
-	vm.selectedRestaurant = RestaurantService.getSelectedRestaurant();
-	vm.selectedMeal = RestaurantService.getSelectedMeal();
-	vm.showRestaurantMenu = false;
-
-	/**
-	 * Listener to restaurant changes.
-	 */
-	$scope.$watch('OrderFromCtrl.selectedRestaurant', function () {
-		if (vm.selectedRestaurant !== null) {
-			//show additional select
-			vm.restaurantService.setSelectedRestaurant(vm.selectedRestaurant);
-			vm.showRestaurantMenu = true;
-		}
-	}, true);
+	vm.isMenuOpen = false;
 
 	/**
 	 * Clean up memory after destroy component.
@@ -52,13 +39,18 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	};
 
 	vm.addOrder = function () {
-		var order = OrderService.getNewOrder();
+		var order = OrderService.getNewOrder(),
+			selectedMeal = vm.restaurantService.selectedMeal;
 
 		order.userAvatar = vm.user.picture;
 		order.userName = vm.user.displayName;
-		order.title = vm.selectedRestaurant.name + ' - ' + vm.selectedMeal.name;
-		order.price = vm.selectedMeal.price;
+		order.title = vm.restaurantService.selectedRestaurant.name + ' - ' + selectedMeal.name;
+		order.price = selectedMeal.price;
 
 		OrderService.addOrder(order);
+	};
+
+	vm.showHideMenu = function() {
+		vm.isMenuOpen = !vm.isMenuOpen;
 	};
 }

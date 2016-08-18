@@ -74,6 +74,9 @@ angular.module('orders.routes', ['ui.router'])
 							},
 							userData: function(AccountService) {
 								return AccountService.getUserData();
+							},
+							listStatus: function (OrderService) {
+								OrderService.loadListStatus();
 							}
 						}
 					}

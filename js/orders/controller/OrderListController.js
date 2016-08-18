@@ -11,11 +11,10 @@ angular
 		'ordersData',
 		'$auth',
 		'$state',
-		'RestaurantService',
 		OrderListCtrl
 	]);
 
-function OrderListCtrl($scope, OrderService, ordersData, $auth, $state, RestaurantService) {
+function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
 	'use strict';
 
 	var vm = this,
@@ -25,7 +24,6 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, $state, Restaura
 	vm.orderService = OrderService;
 	vm.isAllCompleted = OrderService.isAllOrderCompleted();
 	vm.orders = ordersData;
-	vm.restaurantService = RestaurantService;
 
 	/**
 	 * Listener to all changes om orders.

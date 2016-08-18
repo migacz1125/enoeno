@@ -2,9 +2,9 @@
 
 angular
 	.module('orders')
-	.factory('OrderService', ['OrderStorage', OrderService]);
+	.factory('OrderService', ['OrderStorage', 'StatusStorage', OrderService]);
 
-function OrderService(OrderStorage) {
+function OrderService(OrderStorage, StatusStorage) {
 	'use strict';
 
 	var newOrder = {
@@ -14,7 +14,13 @@ function OrderService(OrderStorage) {
 		userName: '',
 		price:''
 	},
-		orders = null;
+		orders = null,
+		orderListStatus = 0;
+
+	var STATUS_OPEN = 0,
+		STATUS_FINALIZED = 1,
+		STATUS_ORDERED = 2,
+		STATUS_DELIVERED = 3;
 
 	return {
 		/**
@@ -143,6 +149,56 @@ function OrderService(OrderStorage) {
 			return orders.filter(function (order) {
 				return (order.completed === true);
 			}).length;
+		},
+
+		updateListStatus: function (status) {
+			StatusStorage.put(status).then(function success() {
+
+			});
+		},
+
+		loadListStatus: function () {
+			StatusStorage.get().then(function (status) {
+				orderListStatus = status;
+				return status;
+			});
+		},
+
+		openOrdering: function () {
+			orderListStatus = STATUS_OPEN;
+			this.updateListStatus(STATUS_OPEN);
+		},
+
+		finalizedOrdering: function () {
+			orderListStatus = STATUS_FINALIZED;
+			this.updateListStatus(STATUS_FINALIZED);
+		},
+
+		orderedOrders: function () {
+			orderListStatus = STATUS_ORDERED;
+			this.updateListStatus(STATUS_ORDERED);
+		},
+
+		deliveredOrders: function () {
+			orderListStatus = STATUS_DELIVERED;
+			this.updateListStatus(STATUS_DELIVERED);
+			this.markAll(false);
+		},
+
+		isOrderActive: function () {
+			return orderListStatus === STATUS_OPEN;
+		},
+
+		isOrderFinalized: function () {
+			return orderListStatus === STATUS_FINALIZED;
+		},
+
+		isOrderOrdered: function () {
+			return orderListStatus === STATUS_ORDERED;
+		},
+
+		isOrderDelivered: function () {
+			return orderListStatus === STATUS_DELIVERED;
 		}
 	};
 };

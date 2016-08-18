@@ -1,35 +1,104 @@
- <header class="header">
+<header class="header">
     <div layout="row" layout-align="center center">
         <h1 class="md-display-1">Takeaway App</h1>
     </div>
-    <div layout="row" layout-align="space-between center" ng-if="OrderFromCtrl.isAuthenticated()">
-        <md-list-item class="noright">
-            <img alt="{{ OrderFromCtrl.user.displayName }}" ng-src="{{ OrderFromCtrl.user.picture }}" class="md-avatar" />
-            <p>{{ OrderFromCtrl.user.displayName }} - What You will to order ?</p>
-        </md-list-item>
-        <md-button ui-sref="logout">
-            <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+    <md-fab-speed-dial ng-if="OrderFromCtrl.isAuthenticated()"
+            md-direction="down"
+            md-open="OrderFromCtrl.isMenuOpen"
+            class="md-scale md-fab-top-right"
+            ng-class="{ 'md-hover-full': demo.hover }"
+            ng-mouseenter="OrderFromCtrl.showHideMenu()"
+            ng-mouseleave="OrderFromCtrl.showHideMenu()">
+        <md-fab-trigger>
+        <md-button aria-label="menu" class="md-fab md-warn">
+            <md-tooltip md-direction="left">Admin menu</md-tooltip>
+            <md-icon class="material-icons" aria-label="menu">menu</md-icon>
         </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.openOrdering()">
+                <md-tooltip md-direction="left">Open ordering</md-tooltip>
+                <md-icon class="material-icons" aria-label="Open ordering">add_shopping_cart</md-icon>
+            </md-button>
+            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.finalizedOrdering()">
+                <md-tooltip md-direction="left">Finalized ordering</md-tooltip>
+                <md-icon class="material-icons" aria-label="Finalized ordering">lock</md-icon>
+            </md-button>
+            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.orderedOrders()">
+                <md-tooltip md-direction="left">Ordered orders</md-tooltip>
+                <i class="fa fa-truck"></i>
+            </md-button>
+            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.deliveredOrders()">
+                <md-tooltip md-direction="left">Delivered orders</md-tooltip>
+                <md-icon class="material-icons" aria-label="Finalized ordering">done_all</md-icon>
+            </md-button>
+            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ui-sref="logout">
+                <md-tooltip md-direction="left">Logout</md-tooltip>
+                <i class="fa fa-sign-out"></i>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderActive()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <img alt="{{ OrderFromCtrl.user.displayName }}" ng-src="{{ OrderFromCtrl.user.picture }}" class="md-avatar" />
+                <div class="md-list-item-text">
+                    <h3>{{ OrderFromCtrl.user.displayName }}</h3>
+                    <p>What You will to order ?</p>
+                </div>
+            </md-list-item>
+        </div>
+        <div layout="column">
+            <form id="new-order" layout="row" layout-align="center center" flex name="orderForm">
+                <md-input-container class="md-block">
+                    <label>Restaurant</label>
+                    <md-select placeholder="Select restaurant" ng-model="OrderFromCtrl.restaurantService.selectedRestaurant">
+                        <md-option ng-value="restaurant" ng-repeat="restaurant in OrderFromCtrl.restaurants">{{restaurant.name}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container ng-if="OrderFromCtrl.restaurantService.selectedRestaurant" class="md-block">
+                    <label>Meal</label>
+                    <md-select placeholder="Select meal" ng-model="OrderFromCtrl.restaurantService.selectedMeal">
+                        <md-option ng-value="meal" ng-repeat="meal in OrderFromCtrl.restaurantService.selectedRestaurant.menu">{{meal.name}}, {{meal.price}} zł</md-option>
+                    </md-select>
+                </md-input-container>
+                <div layout="row" layout-align="center center" class="md-margin">
+                    <md-button class="md-primary md-raised" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div layout="row" layout-align="center center" class="md-padding">
-        <form id="new-order" layout="row" layout-align="center center" flex name="orderForm">
-            <md-input-container class="md-block">
-                <label>Restaurant</label>
-                <md-select placeholder="Select restaurant" ng-model="OrderFromCtrl.selectedRestaurant">
-                    <md-option ng-value="restaurant" ng-repeat="restaurant in OrderFromCtrl.restaurants">{{restaurant.name}}</md-option>
-                </md-select>
-            </md-input-container>
-            <md-input-container ng-if="OrderFromCtrl.selectedRestaurant" class="md-block">
-                <label>Meal</label>
-                <md-select placeholder="Select meal" ng-model="OrderFromCtrl.selectedMeal">
-                    <md-option ng-value="meal" ng-repeat="meal in OrderListCtrl.restaurantService.getSelectedMenu()">{{meal.name}}, {{meal.price}} zł</md-option>
-                </md-select>
-            </md-input-container>
-
-            <div layout="row" layout-align="center center" class="md-margin">
-                <!--<md-button ng-click="clearValue()" ng-disabled="!myModel" style="margin-right: 20px;">Clear</md-button>-->
-                <md-button class="md-primary md-raised" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
-            </div>
-        </form>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderFinalized()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <md-icon class="material-icons" aria-label="Finalized ordering">lock</md-icon>
+                <div class="md-list-item-text">
+                    <h3>Finalized ordering</h3>
+                    <p>Ordering is close and no add new order.</p>
+                </div>
+            </md-list-item>
+        </div>
+    </div>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderOrdered()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <md-icon><i class="fa fa-truck"></i></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Ordered orders</h3>
+                    <p>All orders are ordering now. We wait for delivery order.</p>
+                </div>
+            </md-list-item>
+        </div>
+    </div>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderDelivered()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <md-icon class="material-icons" aria-label="Delivered orders">done_all</md-icon>
+                <div class="md-list-item-text">
+                    <h3>Delivered orders</h3>
+                    <p>All orders delivered to office. Bon Appetit.</p>
+                </div>
+            </md-list-item>
+        </div>
     </div>
 </header>
