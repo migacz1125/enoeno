@@ -1,6 +1,11 @@
 <section id="todoapp" class="section">
-    <div ui-view="top"></div>
-
+    <header class="header">
+        <div layout="row" layout-align="center center">
+            <h1 class="md-display-1">Takeaway App</h1>
+        </div>
+        <div ui-view="top"></div>
+        <div ui-view="menu"></div>
+    </header>
     <section ng-show="OrderListCtrl.orders.length" class="md-padding" ng-cloak>
         <div id="filters" layout="row" layout-align="center center">
             <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === ''}"

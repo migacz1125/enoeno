@@ -1,15 +1,11 @@
 <div>
     <div id="todo-list" class="md-padding">
-        <md-checkbox ng-model="OrderListCtrl.isAllCompleted"
-                     ng-click="OrderListCtrl.orderService.markAll(OrderListCtrl.isAllCompleted)"
-                     ng-change="OrderListCtrl.isAllCompleted = !OrderListCtrl.isAllCompleted">
-            <span ng-show="OrderListCtrl.isAllCompleted">Un-</span>Select All
-        </md-checkbox>
         <md-list>
             <md-list-item ng-repeat="order in OrderListCtrl.orders | filter:OrderListCtrl.statusFilter track by $index">
                 <md-checkbox ng-attr-id="{{ 'order-' + $index }}"
                              ng-model="order.completed"
                              ng-change="OrderListCtrl.orderService.updateOrder(order)"
+                             ng-disabled="true"
                              class="green">
                 </md-checkbox>
                 <img alt="{{ person.name }}" ng-src="{{ order.userAvatar }}" class="md-avatar" />

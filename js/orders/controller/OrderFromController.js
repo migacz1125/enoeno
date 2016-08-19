@@ -1,5 +1,3 @@
-/*global angular */
-
 /**
  * Controller to order list and order service connection.
  */
@@ -24,7 +22,6 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	vm.restaurants = restaurantsData;
 	vm.user = userData;
 	vm.restaurantService = RestaurantService;
-	vm.isMenuOpen = false;
 
 	/**
 	 * Clean up memory after destroy component.
@@ -48,9 +45,5 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 		order.price = selectedMeal.price;
 
 		OrderService.addOrder(order);
-	};
-
-	vm.showHideMenu = function() {
-		vm.isMenuOpen = !vm.isMenuOpen;
 	};
 }
