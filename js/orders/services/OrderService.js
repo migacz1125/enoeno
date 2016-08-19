@@ -2,31 +2,26 @@
 
 angular
 	.module('orders')
-	.factory('OrderService', ['OrderStorage', OrderService]);
+	.factory('OrderService', ['OrderStorage', 'StatusStorage', OrderService]);
 
-function OrderService(OrderStorage) {
+function OrderService(OrderStorage, StatusStorage) {
 	'use strict';
 
-	var newOrder = {completed: false, title: ''},
-		canceled = false,
+	var newOrder = {
+		completed: false,
+		title: '',
+		userAvatar: '',
+		userName: '',
+		price:'',
+		date:''
+	},
 		orders = null,
-		oldOrder = null,
+		orderListStatus = 0;
 
-		/**
-		 * Return is order editing canceled.
-		 *
-		 * @returns {boolean}
-		 */
-		isCanceled = function () {
-			return canceled;
-		},
-
-		/**
-		 * @param {boolean} cancel
-		 */
-		setIsCanceled = function (cancel) {
-			canceled = cancel;
-		};
+	var STATUS_OPEN = 0,
+		STATUS_FINALIZED = 1,
+		STATUS_ORDERED = 2,
+		STATUS_DELIVERED = 3;
 
 	return {
 		/**
@@ -50,9 +45,12 @@ function OrderService(OrderStorage) {
 
 			return OrderStorage.get().then(function (ordersCollection) {
 				orders = ordersCollection;
-				orders.map(function (item) {
-					item.isEditMode = false;
+
+				ordersCollection.map(function (item) {
+					item.date = new Date(item.date);
+					return item;
 				});
+				console.log('----- ordersCollection: ', ordersCollection);
 				return ordersCollection;
 			}.bind(this));
 		},
@@ -60,13 +58,39 @@ function OrderService(OrderStorage) {
 		/**
 		 * Add new order item to collection.
 		 */
-		addOrder: function () {
+		addOrder: function (newOrderItem) {
 			if (!newOrder.title) {
 				return;
 			}
 
-			OrderStorage.insert(newOrder).then(function success() {
-				newOrder = {completed: false, title: ''};
+			newOrderItem.date = new Date();
+
+			newOrderItem.date.setHours(0);
+			newOrderItem.date.setMinutes(0);
+			newOrderItem.date.setSeconds(0);
+			newOrderItem.date.setMilliseconds(0);
+
+			OrderStorage.insert(newOrderItem).then(function success() {
+				newOrder = {
+					completed: false,
+					title: '',
+					userAvatar: '',
+					userName: '',
+					price:'',
+					date:''
+				};
+			});
+		},
+
+		/**
+		 * Update data about target order in collection.
+		 *
+		 * @param {Object} order
+		 */
+		updateOrder: function (order) {
+			OrderStorage.put(order).then(function success() {
+
+			}, function error() {
 			});
 		},
 
@@ -84,73 +108,6 @@ function OrderService(OrderStorage) {
 		 */
 		clearCompletedOrders: function () {
 			OrderStorage.clearCompleted();
-		},
-
-		/**
-		 * Update data about target order in collection.
-		 *
-		 * @param {Object} order
-		 */
-		updateOrder: function (order) {
-			OrderStorage.put(order).then(function success() {
-
-			}, function error() {
-			});
-		},
-
-		/**
-		 * Assign old value of order item during editing.
-		 *
-		 * @param {Object} order
-		 */
-		editOrder: function ($event, order) {
-			$event.stopPropagation();
-
-			order.isEditMode = true;
-			oldOrder = angular.extend({}, order);
-		},
-
-		/**
-		 * If user press 'Esc' key during editing item.
-		 *
-		 * @param {Object} order
-		 */
-		revertEdits: function ($event, order) {
-			$event.stopPropagation();
-
-			order.title = oldOrder.title;
-			order.isEditMode = false;
-
-			this.updateOrder(order);
-			oldOrder = null;
-			setIsCanceled(true);
-		},
-
-		/**
-		 * Save order item after editing.
-		 *
-		 * @param {Object} order
-		 */
-		saveEdits: function ($event, order) {
-			$event.stopPropagation();
-
-			if (isCanceled()) {
-				setIsCanceled(false);
-				return;
-			}
-
-			if (order.title === oldOrder.title) {
-				order.isEditMode = false;
-				return;
-			}
-
-			if (order.title) {
-				this.updateOrder(order);
-			} else {
-				this.removeOrder(order);
-			}
-
-			order.isEditMode = false;
 		},
 
 		/**
@@ -207,6 +164,56 @@ function OrderService(OrderStorage) {
 			return orders.filter(function (order) {
 				return (order.completed === true);
 			}).length;
+		},
+
+		updateListStatus: function (status) {
+			StatusStorage.put(status).then(function success() {
+
+			});
+		},
+
+		loadListStatus: function () {
+			StatusStorage.get().then(function (status) {
+				orderListStatus = status;
+				return status;
+			});
+		},
+
+		openOrdering: function () {
+			orderListStatus = STATUS_OPEN;
+			this.updateListStatus(STATUS_OPEN);
+		},
+
+		finalizedOrdering: function () {
+			orderListStatus = STATUS_FINALIZED;
+			this.updateListStatus(STATUS_FINALIZED);
+		},
+
+		orderedOrders: function () {
+			orderListStatus = STATUS_ORDERED;
+			this.updateListStatus(STATUS_ORDERED);
+		},
+
+		deliveredOrders: function () {
+			orderListStatus = STATUS_DELIVERED;
+			this.updateListStatus(STATUS_DELIVERED);
+			this.markAll(false);
+		},
+
+		isOrderActive: function () {
+			return orderListStatus === STATUS_OPEN;
+		},
+
+		isOrderFinalized: function () {
+			return orderListStatus === STATUS_FINALIZED;
+		},
+
+		isOrderOrdered: function () {
+			return orderListStatus === STATUS_ORDERED;
+		},
+
+		isOrderDelivered: function () {
+			return orderListStatus === STATUS_DELIVERED;
 		}
 	};
 };

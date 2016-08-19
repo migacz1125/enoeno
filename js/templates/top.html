@@ -1,0 +1,65 @@
+<div>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderActive()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <img alt="{{ OrderFromCtrl.user.displayName }}" ng-src="{{ OrderFromCtrl.user.picture }}" class="md-avatar" />
+                <div class="md-list-item-text">
+                    <h3>{{ OrderFromCtrl.user.displayName }}</h3>
+                    <p>What You will to order ?</p>
+                </div>
+            </md-list-item>
+        </div>
+        <div layout="column">
+            <form id="new-order" layout="row" layout-align="center center" flex name="orderForm">
+                <md-input-container class="md-block">
+                    <label>Restaurant</label>
+                    <md-select placeholder="Select restaurant" ng-model="OrderFromCtrl.restaurantService.selectedRestaurant">
+                        <md-option ng-value="restaurant" ng-repeat="restaurant in OrderFromCtrl.restaurants">{{restaurant.name}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container ng-if="OrderFromCtrl.restaurantService.selectedRestaurant" class="md-block">
+                    <label>Meal</label>
+                    <md-select placeholder="Select meal" ng-model="OrderFromCtrl.restaurantService.selectedMeal">
+                        <md-option ng-value="meal" ng-repeat="meal in OrderFromCtrl.restaurantService.selectedRestaurant.menu">{{meal.name}}, {{meal.price}} zł</md-option>
+                    </md-select>
+                </md-input-container>
+                <div layout="row" layout-align="center center" class="md-margin">
+                    <md-button class="md-primary md-raised" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderFinalized()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <md-icon class="material-icons" aria-label="Finalized ordering">lock</md-icon>
+                <div class="md-list-item-text">
+                    <h3>Finalized ordering</h3>
+                    <p>Ordering is close and no add new order.</p>
+                </div>
+            </md-list-item>
+        </div>
+    </div>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderOrdered()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <md-icon><i class="fa fa-truck"></i></md-icon>
+                <div class="md-list-item-text">
+                    <h3>Ordered orders</h3>
+                    <p>All orders are ordering now. We wait for delivery order.</p>
+                </div>
+            </md-list-item>
+        </div>
+    </div>
+    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderDelivered()">
+        <div layout="column">
+            <md-list-item class="md-2-line">
+                <md-icon class="material-icons" aria-label="Delivered orders">done_all</md-icon>
+                <div class="md-list-item-text">
+                    <h3>Delivered orders</h3>
+                    <p>All orders delivered to office. Bon Appetit.</p>
+                </div>
+            </md-list-item>
+        </div>
+    </div>
+</div>

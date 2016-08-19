@@ -20,7 +20,7 @@ function LoginCtrl($scope, $location, $auth) {
 		$auth.login($scope.user)
 			.then(function() {
 				//toastr.success('You have successfully signed in!');
-				$location.path('/');
+				$location.path('');
 			})
 			.catch(function(error) {
 				//toastr.error(error.data.message, error.status);
@@ -30,7 +30,7 @@ function LoginCtrl($scope, $location, $auth) {
 	vm.authenticate = function(provider) {
 		$auth.authenticate(provider)
 			.then(function() {
-				$location.path('/');
+				$location.path('');
 			})
 			.catch(function(error) {});
 	};

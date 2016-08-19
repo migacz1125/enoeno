@@ -1,0 +1,29 @@
+<md-content>
+    <div id="todo-list" class="md-padding">
+        <md-list>
+            <md-subheader ng-repeat="(key, value) in OrderListCtrl.orders | groupBy: 'date'">
+                {{value[0].date.getDate()}}-{{value[0].date.getMonth()+1}}-{{value[0].date.getFullYear()}}
+                <md-list-item ng-repeat="order in value | filter:OrderListCtrl.statusFilter track by $index">
+                    <md-checkbox ng-attr-id="{{ 'order-' + $index }}"
+                                 ng-model="order.completed"
+                                 ng-change="OrderListCtrl.orderService.updateOrder(order)"
+                                 ng-disabled="true"
+                                 class="green">
+                    </md-checkbox>
+                    <img alt="{{ person.name }}" ng-src="{{ order.userAvatar }}" class="md-avatar" />
+                    <p>{{order.title}} - {{order.price}} zł</p>
+                    <md-icon class="material-icons" ng-show="OrderListCtrl.orderService.isOrderActive()" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
+                </md-list-item>
+            </md-subheader>
+        </md-list>
+    </div>
+    <div layout="column" class="md-padding" layout-align="center center" ng-show="OrderListCtrl.orders.length" ng-cloak>
+        <div flex>
+            <strong>{{OrderListCtrl.remainingCount}}</strong>
+            <ng-pluralize count="OrderListCtrl.remainingCount" when="{ one: 'order left', other: 'orders left' }"></ng-pluralize>
+        </div>
+        <div flex>
+            <md-button id="clear-completed" class="btn--pink md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear delivered</md-button>
+        </div>
+    </div>
+</md-content>

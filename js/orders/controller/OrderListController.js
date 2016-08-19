@@ -7,15 +7,14 @@ angular
 	.module('orders')
 	.controller('OrderListController', [
 		'$scope',
-		'$stateParams',
 		'OrderService',
 		'ordersData',
 		'$auth',
-		'AccountService',
+		'$state',
 		OrderListCtrl
 	]);
 
-function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, AccountService) {
+function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
 	'use strict';
 
 	var vm = this,
@@ -39,7 +38,11 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, Ac
 	 * Monitor the current route for changes and adjust the filter accordingly.
 	 */
 	$scope.$on('$stateChangeSuccess', function () {
-		vm.status = $stateParams.status || '';
+		vm.status = $state.params.status || '';
+
+		if (vm.status === '') {
+			$state.go('home.list');
+		}
 
 		vm.statusFilter = (vm.status === TAP_ACTIVE) ?
 			{ completed: false } : (vm.status === TAP_COMPLETED) ?
@@ -71,14 +74,4 @@ function OrderListCtrl($scope, $stateParams, OrderService, ordersData, $auth, Ac
 	vm.isAuthenticated = function() {
 		return $auth.isAuthenticated();
 	};
-
-	vm.getUserData = function () {
-		AccountService.getProfile()
-			.then(function(response) {
-				vm.user = response.data;
-			})
-			.catch(function(response) {});
-	};
-
-	vm.getUserData();
 }
