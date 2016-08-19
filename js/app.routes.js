@@ -79,6 +79,10 @@ angular.module('orders.routes', ['ui.router'])
 								OrderService.loadListStatus();
 							}
 						}
+					},
+					'menu@home': {
+						templateUrl: './js/templates/menu-top.html',
+						controller: 'MenuController as MenuCtrl'
 					}
 				}
 			})

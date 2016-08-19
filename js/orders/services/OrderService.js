@@ -12,7 +12,8 @@ function OrderService(OrderStorage, StatusStorage) {
 		title: '',
 		userAvatar: '',
 		userName: '',
-		price:''
+		price:'',
+		date:''
 	},
 		orders = null,
 		orderListStatus = 0;
@@ -44,6 +45,12 @@ function OrderService(OrderStorage, StatusStorage) {
 
 			return OrderStorage.get().then(function (ordersCollection) {
 				orders = ordersCollection;
+
+				ordersCollection.map(function (item) {
+					item.date = new Date(item.date);
+					return item;
+				});
+
 				return ordersCollection;
 			}.bind(this));
 		},
@@ -56,13 +63,19 @@ function OrderService(OrderStorage, StatusStorage) {
 				return;
 			}
 
+			newOrderItem.date = new Date();
+			newOrderItem.date.setSeconds(0);
+			newOrderItem.date.setMinutes(0);
+			newOrderItem.date.setMilliseconds(0);
+
 			OrderStorage.insert(newOrderItem).then(function success() {
 				newOrder = {
 					completed: false,
 					title: '',
 					userAvatar: '',
 					userName: '',
-					price:''
+					price:'',
+					date:''
 				};
 			});
 		},

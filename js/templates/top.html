@@ -1,43 +1,4 @@
-<header class="header">
-    <div layout="row" layout-align="center center">
-        <h1 class="md-display-1">Takeaway App</h1>
-    </div>
-    <md-fab-speed-dial ng-if="OrderFromCtrl.isAuthenticated()"
-            md-direction="down"
-            md-open="OrderFromCtrl.isMenuOpen"
-            class="md-scale md-fab-top-right"
-            ng-class="{ 'md-hover-full': demo.hover }"
-            ng-mouseenter="OrderFromCtrl.showHideMenu()"
-            ng-mouseleave="OrderFromCtrl.showHideMenu()">
-        <md-fab-trigger>
-        <md-button aria-label="menu" class="md-fab md-warn">
-            <md-tooltip md-direction="left">Admin menu</md-tooltip>
-            <md-icon class="material-icons" aria-label="menu">menu</md-icon>
-        </md-button>
-        </md-fab-trigger>
-        <md-fab-actions>
-            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.openOrdering()">
-                <md-tooltip md-direction="left">Open ordering</md-tooltip>
-                <md-icon class="material-icons" aria-label="Open ordering">add_shopping_cart</md-icon>
-            </md-button>
-            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.finalizedOrdering()">
-                <md-tooltip md-direction="left">Finalized ordering</md-tooltip>
-                <md-icon class="material-icons" aria-label="Finalized ordering">lock</md-icon>
-            </md-button>
-            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.orderedOrders()">
-                <md-tooltip md-direction="left">Ordered orders</md-tooltip>
-                <i class="fa fa-truck"></i>
-            </md-button>
-            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ng-click="OrderFromCtrl.orderService.deliveredOrders()">
-                <md-tooltip md-direction="left">Delivered orders</md-tooltip>
-                <md-icon class="material-icons" aria-label="Finalized ordering">done_all</md-icon>
-            </md-button>
-            <md-button aria-label="Logout" class="md-fab md-raised md-mini" ui-sref="logout">
-                <md-tooltip md-direction="left">Logout</md-tooltip>
-                <i class="fa fa-sign-out"></i>
-            </md-button>
-        </md-fab-actions>
-    </md-fab-speed-dial>
+<div>
     <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderActive()">
         <div layout="column">
             <md-list-item class="md-2-line">
@@ -101,4 +62,4 @@
             </md-list-item>
         </div>
     </div>
-</header>
+</div>
