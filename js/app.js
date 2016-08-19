@@ -1,4 +1,4 @@
-angular.module('orders', ['ngRoute', 'ui.router', 'satellizer', 'ngMaterial', 'orders.routes'])
+angular.module('orders', ['ngRoute', 'ui.router', 'satellizer', 'ngMaterial', 'orders.routes', 'angular.filter'])
 	.config(function($authProvider, $windowProvider) {
 		'use strict';
 		$authProvider.github({
