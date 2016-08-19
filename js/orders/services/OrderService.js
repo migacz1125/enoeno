@@ -50,7 +50,7 @@ function OrderService(OrderStorage, StatusStorage) {
 					item.date = new Date(item.date);
 					return item;
 				});
-
+				console.log('----- ordersCollection: ', ordersCollection);
 				return ordersCollection;
 			}.bind(this));
 		},
@@ -64,8 +64,10 @@ function OrderService(OrderStorage, StatusStorage) {
 			}
 
 			newOrderItem.date = new Date();
-			newOrderItem.date.setSeconds(0);
+
+			newOrderItem.date.setHours(0);
 			newOrderItem.date.setMinutes(0);
+			newOrderItem.date.setSeconds(0);
 			newOrderItem.date.setMilliseconds(0);
 
 			OrderStorage.insert(newOrderItem).then(function success() {
