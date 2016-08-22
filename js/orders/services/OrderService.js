@@ -50,7 +50,7 @@ function OrderService(OrderStorage, StatusStorage) {
 					item.date = new Date(item.date);
 					return item;
 				});
-				console.log('----- ordersCollection: ', ordersCollection);
+
 				return ordersCollection;
 			}.bind(this));
 		},
