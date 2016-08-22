@@ -22,27 +22,8 @@ function LogoutCtrl($scope, $location, $auth) {
 	$auth.logout()
 		.then(function() {
 			//toastr.info('You have been logged out');
-			$location.path('/');
+			$location.path('/login');
 		});
-
-	/**
-	 * Listener to all changes om orders.
-	 */
-	/*$scope.$watch('OrderListCtrl.orders', function () {
-		vm.remainingCount = OrderService.getNumOfActive();
-		vm.completedCount = OrderService.getNumOfCompleted();
-		vm.isAllCompleted = OrderService.isAllOrderCompleted();
-	}, true);*/
-
-	/**
-	 * Monitor the current route for changes and adjust the filter accordingly.
-	 */
-	/*$scope.$on('$routeChangeSuccess', function () {
-		vm.status = $routeParams.status || '';
-		vm.statusFilter = (vm.status === TAP_ACTIVE) ?
-			{ completed: false } : (vm.status === TAP_COMPLETED) ?
-			{ completed: true } : {};
-	});*/
 
 	/**
 	 * Clean up memory after destroy component.
