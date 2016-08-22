@@ -22,6 +22,16 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	vm.restaurants = restaurantsData;
 	vm.user = userData;
 	vm.restaurantService = RestaurantService;
+	vm.isAddOrderEnabled = false;
+
+	/**
+	 * Listener to all changes om orders.
+	 */
+	$scope.$watch('OrderFromCtrl.restaurantService.selectedMeal', function (value) {
+		if (value) {
+			vm.isAddOrderEnabled = true;
+		}
+	}, true);
 
 	/**
 	 * Clean up memory after destroy component.
