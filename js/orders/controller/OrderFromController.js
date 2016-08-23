@@ -49,8 +49,7 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 		var order = OrderService.getNewOrder(),
 			selectedMeal = vm.restaurantService.selectedMeal;
 
-		order.userAvatar = vm.user.picture;
-		order.userName = vm.user.displayName;
+		order.user = vm.user;
 		order.title = vm.restaurantService.selectedRestaurant.name + ' - ' + selectedMeal.name;
 		order.price = selectedMeal.price;
 

@@ -20,11 +20,17 @@ function AccountModel($http) {
 
 function AccountService(AccountModel) {
 	'use strict';
+    var user = null;
 
 	return {
 		getUserData: function () {
+			if (user) {
+				return user;
+			}
+
 			return AccountModel.getProfile()
 				.then(function(response) {
+					user = response.data;
 					return response.data;
 				})
 				.catch(function(response) {});

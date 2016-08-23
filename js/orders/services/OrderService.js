@@ -2,16 +2,15 @@
 
 angular
 	.module('orders')
-	.factory('OrderService', ['OrderStorage', 'StatusStorage', OrderService]);
+	.factory('OrderService', ['OrderStorage', 'StatusStorage','AccountService', OrderService]);
 
-function OrderService(OrderStorage, StatusStorage) {
+function OrderService(OrderStorage, StatusStorage, AccountService) {
 	'use strict';
 
 	var newOrder = {
 		completed: false,
 		title: '',
-		userAvatar: '',
-		userName: '',
+		user: null,
 		price:'',
 		date:''
 	},
@@ -22,6 +21,17 @@ function OrderService(OrderStorage, StatusStorage) {
 		STATUS_FINALIZED = 1,
 		STATUS_ORDERED = 2,
 		STATUS_DELIVERED = 3;
+
+	var _getCurrentDate = function () {
+		var currentDate = new Date();
+
+		currentDate.setHours(0);
+		currentDate.setMinutes(0);
+		currentDate.setSeconds(0);
+		currentDate.setMilliseconds(0);
+
+		return currentDate;
+	};
 
 	return {
 		/**
@@ -63,23 +73,34 @@ function OrderService(OrderStorage, StatusStorage) {
 				return;
 			}
 
-			newOrderItem.date = new Date();
-
-			newOrderItem.date.setHours(0);
-			newOrderItem.date.setMinutes(0);
-			newOrderItem.date.setSeconds(0);
-			newOrderItem.date.setMilliseconds(0);
+			newOrderItem.date = _getCurrentDate();
 
 			OrderStorage.insert(newOrderItem).then(function success() {
 				newOrder = {
 					completed: false,
 					title: '',
-					userAvatar: '',
-					userName: '',
+					user: null,
 					price:'',
 					date:''
 				};
 			});
+		},
+
+		/**
+		 * Check that user order meal today yet.
+		 *
+		 * @param {Object} user
+		 * @returns {boolean}
+		 */
+		isUserOrderedToday: function (user) {
+			var response = orders.some(function(order) {
+				return (
+					order.user._id === user._id &&
+					Number(order.date) === Number(_getCurrentDate())
+				);
+			});
+
+			return !response;
 		},
 
 		/**
@@ -214,6 +235,12 @@ function OrderService(OrderStorage, StatusStorage) {
 
 		isOrderDelivered: function () {
 			return orderListStatus === STATUS_DELIVERED;
+		},
+
+		isOrderRemoveEnabled: function (order) {
+			var currentUser = AccountService.getUserData();
+
+			return this.isOrderActive() && order.user._id === currentUser._id;
 		}
 	};
 };

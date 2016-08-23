@@ -32,7 +32,9 @@ function LoginCtrl($scope, $location, $auth) {
 			.then(function() {
 				$location.path('');
 			})
-			.catch(function(error) {});
+			.catch(function(error) {
+				$location.path('/logout');
+			});
 	};
 
 	/**
