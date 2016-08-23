@@ -21,36 +21,6 @@ body {
 	font-weight: bold;
 }
 
-.md-button.md-raised.btn--pink {
-	color: white;
-	background-color: rgba(255,64,129,0.87);
-}
-
-.md-button.md-raised.btn--pink[disabled] {
-	color : rgba(0, 0, 0, 0.26);
-	background-color: whitesmoke;
-}
-
-.md-button.md-raised.btn--pink:not([disabled]):hover {
-	color : rgba(255,64,129,0.87);
-	background-color: white;
-}
-
-.md-button.md-raised.btn--gray {
-	color: white;
-	background-color: lightgray;
-}
-
-.md-button.md-raised.btn--gary[disabled] {
-	color : rgba(0, 0, 0, 0.26);
-	background-color: whitesmoke;
-}
-
-.md-button.md-raised.btn--gray:not([disabled]):hover {
-	color : white;
-	background-color: lightgray;
-}
-
 .width--100 {
 	width: 100%;
 }
