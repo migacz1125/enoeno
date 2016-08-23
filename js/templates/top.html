@@ -5,11 +5,12 @@
                 <img alt="{{ OrderFromCtrl.user.displayName }}" ng-src="{{ OrderFromCtrl.user.picture }}" class="md-avatar" />
                 <div class="md-list-item-text">
                     <h3>{{ OrderFromCtrl.user.displayName }}</h3>
-                    <p>What You will to order ?</p>
+                    <p ng-show="OrderFromCtrl.orderService.isUserOrderedToday(OrderFromCtrl.user)">What You will to order ?</p>
+                    <p ng-show="!OrderFromCtrl.orderService.isUserOrderedToday(OrderFromCtrl.user)">You have ordered food today.</p>
                 </div>
             </md-list-item>
         </div>
-        <div layout="column">
+        <div layout="column" ng-if="OrderFromCtrl.orderService.isUserOrderedToday(OrderFromCtrl.user)">
             <form id="new-order" layout="row" layout-align="center center" flex name="orderForm">
                 <md-input-container class="md-block">
                     <label>Restaurant</label>
@@ -24,7 +25,7 @@
                     </md-select>
                 </md-input-container>
                 <div layout="row" layout-align="center center" class="md-margin">
-                    <md-button class="md-primary md-raised" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
+                    <md-button class="md-primary md-raised" ng-disabled="!OrderFromCtrl.isAddOrderEnabled" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
                 </div>
             </form>
         </div>

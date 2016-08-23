@@ -22,6 +22,16 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	vm.restaurants = restaurantsData;
 	vm.user = userData;
 	vm.restaurantService = RestaurantService;
+	vm.isAddOrderEnabled = false;
+
+	/**
+	 * Listener to all changes om orders.
+	 */
+	$scope.$watch('OrderFromCtrl.restaurantService.selectedMeal', function (value) {
+		if (value) {
+			vm.isAddOrderEnabled = true;
+		}
+	}, true);
 
 	/**
 	 * Clean up memory after destroy component.
@@ -39,8 +49,7 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 		var order = OrderService.getNewOrder(),
 			selectedMeal = vm.restaurantService.selectedMeal;
 
-		order.userAvatar = vm.user.picture;
-		order.userName = vm.user.displayName;
+		order.user = vm.user;
 		order.title = vm.restaurantService.selectedRestaurant.name + ' - ' + selectedMeal.name;
 		order.price = selectedMeal.price;
 

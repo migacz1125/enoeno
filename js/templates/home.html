@@ -8,15 +8,15 @@
     </header>
     <section ng-show="OrderListCtrl.orders.length" class="md-padding" ng-cloak>
         <div id="filters" layout="row" layout-align="center center">
-            <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.status === ''}"
+            <md-button ng-class="{'md-accent md-raised': OrderListCtrl.status === ''}"
                        ng-class="{selected: OrderListCtrl.status === ''}"
                        ui-sref=".list" >All
             </md-button>
-            <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.isActiveTap()}"
+            <md-button ng-class="{'md-accent md-raised': OrderListCtrl.isActiveTap()}"
                        ng-class="{selected: OrderListCtrl.isActiveTap()}"
                        ui-sref=".active({status: 'active'})">Active
             </md-button>
-            <md-button ng-class="{'md-raised btn--gray': OrderListCtrl.isCompletedTap()}"
+            <md-button ng-class="{'md-accent md-raised': OrderListCtrl.isCompletedTap()}"
                        ng-class="{selected: OrderListCtrl.isCompletedTap()}"
                        ui-sref=".completed({status: 'completed'})">Delivered
             </md-button>

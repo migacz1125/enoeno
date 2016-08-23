@@ -141,6 +141,7 @@ app.get('/api/me', ensureAuthenticated, function(req, res) {
  |--------------------------------------------------------------------------
  */
 app.put('/api/me', ensureAuthenticated, function(req, res) {
+
   User.findById(req.user, function(err, user) {
     if (!user) {
       return res.status(400).send({ message: 'User not found' });
@@ -270,7 +271,6 @@ app.post('/auth/google', function(req, res) {
  |--------------------------------------------------------------------------
  */
 app.post('/auth/github', function(req, res) {
-  console.log('---- node server: auth github');
   var accessTokenUrl = 'https://github.com/login/oauth/access_token';
   var userApiUrl = 'https://api.github.com/user';
   var params = {
@@ -287,7 +287,6 @@ app.post('/auth/github', function(req, res) {
 
     // Step 2. Retrieve profile information about the current user.
     request.get({ url: userApiUrl, qs: accessToken, headers: headers, json: true }, function(err, response, profile) {
-
       // Step 3a. Link user accounts.
       if (req.header('Authorization')) {
         User.findOne({ github: profile.id }, function(err, existingUser) {
@@ -316,10 +315,12 @@ app.post('/auth/github', function(req, res) {
             var token = createJWT(existingUser);
             return res.send({ token: token });
           }
+
           var user = new User();
           user.github = profile.id;
           user.picture = profile.avatar_url;
           user.displayName = profile.name;
+          user.email = profile.email;
           user.save(function() {
             var token = createJWT(user);
             res.send({ token: token });
