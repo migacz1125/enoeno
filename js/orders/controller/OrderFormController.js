@@ -27,8 +27,8 @@ function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	/**
 	 * Listener to all changes om orders.
 	 */
-	$scope.$watch('OrderFormCtrl.restaurantService.selectedMeal', function (value) {
-		if (value) {
+	$scope.$watch('OrderFormCtrl.restaurantService.selectedMeal', function () {
+		if (vm.restaurantService.selectedMeal) {
 			vm.isAddOrderEnabled = true;
 		}
 	}, true);

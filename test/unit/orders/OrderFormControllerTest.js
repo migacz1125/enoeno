@@ -9,6 +9,7 @@
 
 		beforeEach(
 			inject(function ($rootScope, $controller, OrderService, RestaurantService) {
+
 				scope = $rootScope.$new();
 				ctrl = $controller('OrderFormController', {
 					$scope: scope,
@@ -21,27 +22,35 @@
 			}
 		));
 
-		it('Should default isMenuOpen default value', function () {
-//			expect(ctrl.isMenuOpen).toBeFalsy();
-//			expect(ctrl.orderService).toBeDefined();
+		it('Should default value after create', function () {
+			expect(ctrl.orderService).toBeDefined();
+			expect(ctrl.restaurantService).toBeDefined();
+			expect(ctrl.restaurants).toBeDefined();
+			expect(ctrl.user).toBeDefined();
+			expect(ctrl.isAddOrderEnabled).toBeFalsy();
 		});
 
-		it('Should change isMenuOpen value', function () {
-//			expect(ctrl).toBeDefined();
-//			ctrl.showHideMenu();
-//			expect(ctrl.isMenuOpen).toBeTruthy();
-//			ctrl.showHideMenu();
-//			expect(ctrl.isMenuOpen).toBeFalsy();
+		it('Should watch to change selected meal value', function () {
+			ctrl.restaurantService.selectedMeal = 'meal';
+			scope.$digest();
+			expect(ctrl.isAddOrderEnabled).toBeTruthy();
 		});
 
-		it('should clean memeory after destroy', function () {
+		it('Set selected meal as empty should disabled add btn', function () {
+			ctrl.restaurantService.selectedMeal = null;
+			scope.$digest();
+			expect(ctrl.restaurantService.selectedMeal).toBeNull();
+			expect(ctrl.isAddOrderEnabled).toBeFalsy();
+		});
+
+//		it('should clean memeory after destroy', function () {
 //			spyOn(ctrl, 'clearAfterDestroy');
 //			scope.$destroy();
 //			expect(ctrl.clearAfterDestroy).toHaveBeenCalled();
-		});
+//		});
 
-		afterEach(function() {
-			scope.$destroy();
-		});
+//		afterEach(function() {
+//			scope.$destroy();
+//		});
 	});
 }());
