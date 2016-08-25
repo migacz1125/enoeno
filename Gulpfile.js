@@ -58,6 +58,15 @@ gulp.task('test', function (done) {
 	}, done).start();
 });
 
+/**
+ * Watch for file changes and re-run tests on each change
+ */
+gulp.task('tdd', function (done) {
+	new karmaServer({
+		configFile: __dirname + '/test/config/karma.conf.js'
+	}, done).start();
+});
+
 gulp.task('node-server', function (cb) {
 	exec('mongod --dbpath ./data', function (err, stdout, stderr) {
 		console.log(stdout);

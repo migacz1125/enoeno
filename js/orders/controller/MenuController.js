@@ -20,11 +20,15 @@ function MenuCtrl($scope, OrderService) {
 	 * Clean up memory after destroy component.
 	 */
 	$scope.$on('$destroy', function(){
-		vm = null;
-		$scope = null;
+		vm.clearAfterDestroy();
 	});
 
 	vm.showHideMenu = function() {
 		vm.isMenuOpen = !vm.isMenuOpen;
+	};
+
+	vm.clearAfterDestroy = function () {
+		vm = null;
+		$scope = null;
 	};
 }

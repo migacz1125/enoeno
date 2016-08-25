@@ -3,17 +3,17 @@
  */
 angular
 	.module('orders')
-	.controller('OrderFromController', [
+	.controller('OrderFormController', [
 		'$scope',
 		'OrderService',
 		'restaurantsData',
 		'userData',
 		'$auth',
 		'RestaurantService',
-		OrderFromCtrl
+		OrderFormCtrl
 	]);
 
-function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService) {
+function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService) {
 	'use strict';
 
 	var vm = this;
@@ -27,7 +27,7 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	/**
 	 * Listener to all changes om orders.
 	 */
-	$scope.$watch('OrderFromCtrl.restaurantService.selectedMeal', function (value) {
+	$scope.$watch('OrderFormCtrl.restaurantService.selectedMeal', function (value) {
 		if (value) {
 			vm.isAddOrderEnabled = true;
 		}
