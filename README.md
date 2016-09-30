@@ -3,7 +3,7 @@
 ## Run app
 * clone git repository
 * npm install
-* run MongoDB
+* run MongoDB (mongod --dbpath ./data)
 * run backend server: node server\node\server.js
 * run server: node_modules\\.bin\gulp connect
 * put in browser: localhost:8000\index.html
