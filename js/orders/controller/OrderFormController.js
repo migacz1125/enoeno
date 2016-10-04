@@ -37,8 +37,7 @@ function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	 * Clean up memory after destroy component.
 	 */
 	$scope.$on('$destroy', function(){
-		vm = null;
-		$scope = null;
+		vm.clearAfterDestroy();
 	});
 
 	vm.isAuthenticated = function() {
@@ -46,13 +45,18 @@ function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	};
 
 	vm.addOrder = function () {
-		var order = OrderService.getNewOrder(),
+		var order = vm.orderService.getNewOrder(),
 			selectedMeal = vm.restaurantService.selectedMeal;
 
 		order.user = vm.user;
 		order.title = vm.restaurantService.selectedRestaurant.name + ' - ' + selectedMeal.name;
 		order.price = selectedMeal.price;
 
-		OrderService.addOrder(order);
+		vm.orderService.addOrder(order);
+	};
+
+	vm.clearAfterDestroy = function () {
+		vm = null;
+		$scope = null;
 	};
 }
