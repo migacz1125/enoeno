@@ -90,5 +90,3 @@ gulp.task('start', ['build', 'connect', 'node-server'], function () {
 });
 
 gulp.task('pre-commit', ['check-style', 'test']);
-
-gulp.task('pre-push', ['check-style', 'test']);

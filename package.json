@@ -29,7 +29,6 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.4",
     "guppy-pre-commit": "^0.4.0",
-    "guppy-pre-push": "^0.2.1",
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
     "karma": "1.2.0",
