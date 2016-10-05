@@ -6,10 +6,11 @@ angular
 	.controller('MenuController', [
 		'$scope',
 		'OrderStatusService',
+		'OrderService',
 		MenuCtrl
 	]);
 
-function MenuCtrl($scope, OrderStatusService) {
+function MenuCtrl($scope, OrderStatusService, OrderService) {
 	'use strict';
 
 	var vm = this;
@@ -30,5 +31,10 @@ function MenuCtrl($scope, OrderStatusService) {
 	vm.clearAfterDestroy = function () {
 		vm = null;
 		$scope = null;
+	};
+
+	vm.deliveredStatusAndMarkAllOrder = function() {
+		OrderStatusService.deliveredOrders();
+		OrderService.markAll(false);
 	};
 }

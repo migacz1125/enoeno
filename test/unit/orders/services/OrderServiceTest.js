@@ -8,8 +8,6 @@
 		var sut,
 			scope,
 			orderStorage,
-			accountService,
-			orderStatusService,
 			q,
 			exampleOrder = {
 				completed: false,
@@ -26,12 +24,10 @@
 		currentDate.setMilliseconds(0);
 
 		beforeEach(
-			inject(function (OrderService, $rootScope, OrderStorage, AccountService, $q, OrderStatusService) {
+			inject(function (OrderService, $rootScope, OrderStorage, $q) {
 				scope = $rootScope.$new();
 				sut = OrderService;
 				orderStorage = OrderStorage;
-				accountService = AccountService;
-				orderStatusService = OrderStatusService;
 				q = $q;
 			}
 		));
@@ -48,7 +44,6 @@
 			expect(sut.isAllOrderCompleted).toBeDefined();
 			expect(sut.getNumOfActive).toBeDefined();
 			expect(sut.getNumOfCompleted).toBeDefined();
-			expect(sut.isOrderRemoveEnabled).toBeDefined();
 		});
 
 		it('getNewOrder: should return new order object', function () {
@@ -250,39 +245,6 @@
 			scope.$digest();
 
 			expect(sut.getNumOfCompleted()).toEqual(0);
-		});
-
-		it('isOrderRemoveEnabled: should return true.', function () {
-			var user = {_id:1, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
-
-			spyOn(accountService, 'getUserData').and.returnValue(user);
-			spyOn(orderStatusService, 'isOrderActive').and.returnValue(true);
-
-			var response = sut.isOrderRemoveEnabled(exampleOrder);
-
-			expect(response).toBeTruthy();
-		});
-
-		it('isOrderRemoveEnabled: should return false if order from other user.', function () {
-			var user = {_id:2, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
-
-			spyOn(accountService, 'getUserData').and.returnValue(user);
-			spyOn(orderStatusService, 'isOrderActive').and.returnValue(true);
-
-			var response = sut.isOrderRemoveEnabled(exampleOrder);
-
-			expect(response).toBeFalsy();
-		});
-
-		it('isOrderRemoveEnabled: should return false if ordered status is close.', function () {
-			var user = {_id:1, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
-
-			spyOn(accountService, 'getUserData').and.returnValue(user);
-			spyOn(orderStatusService, 'isOrderActive').and.returnValue(false);
-
-			var response = sut.isOrderRemoveEnabled(exampleOrder);
-
-			expect(response).toBeFalsy();
 		});
 
 		afterEach(function() {

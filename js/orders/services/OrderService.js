@@ -2,9 +2,9 @@
 
 angular
 	.module('orders')
-	.factory('OrderService', ['OrderStorage','AccountService', 'OrderStatusService', OrderService]);
+	.factory('OrderService', ['OrderStorage', OrderService]);
 
-function OrderService(OrderStorage, AccountService, OrderStatusService) {
+function OrderService(OrderStorage) {
 	'use strict';
 
 	var newOrder = {
@@ -184,11 +184,5 @@ function OrderService(OrderStorage, AccountService, OrderStatusService) {
 				return (order.completed === true);
 			}).length;
 		},
-
-		isOrderRemoveEnabled: function (order) {
-			var currentUser = AccountService.getUserData();
-
-			return OrderStatusService.isOrderActive() && order.user._id === currentUser._id;
-		}
 	};
 };

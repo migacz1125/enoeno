@@ -8,13 +8,15 @@ angular
 	.controller('OrderListController', [
 		'$scope',
 		'OrderService',
+		'OrderStatusService',
+		'AccountService',
 		'ordersData',
 		'$auth',
 		'$state',
 		OrderListCtrl
 	]);
 
-function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
+function OrderListCtrl($scope, OrderService, OrderStatusService, AccountService, ordersData, $auth, $state) {
 	'use strict';
 
 	var vm = this,
@@ -77,5 +79,11 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
 	vm.clearAfterDestroy = function () {
 		vm = null;
 		$scope = null;
+	};
+
+	vm.isOrderRemoveEnabled = function (order) {
+		var currentUser = AccountService.getUserData();
+
+		return OrderStatusService.isOrderActive() && order.user._id === currentUser._id;
 	};
 }

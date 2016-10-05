@@ -22,6 +22,10 @@ function OrderStatusService(StatusStorage) {
 			});
 		},
 
+		getStatus: function() {
+			return orderListStatus;
+		},
+
 		updateListStatus: function (status) {
 			StatusStorage.put(status).then(function success() {
 
@@ -46,7 +50,6 @@ function OrderStatusService(StatusStorage) {
 		deliveredOrders: function () {
 			orderListStatus = STATUS_DELIVERED;
 			this.updateListStatus(STATUS_DELIVERED);
-			this.markAll(false);
 		},
 
 		isOrderActive: function () {

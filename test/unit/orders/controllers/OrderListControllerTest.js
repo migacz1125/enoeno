@@ -8,14 +8,25 @@
 		var scope,
 			ctrl,
 			state,
-			auth;
+			auth,
+			orderStatusService,
+			accountService,
+			exampleOrder = {
+				completed: false,
+				title: 'test',
+				user: {_id:1, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713},
+				price: 20,
+				date: '2016-09-29T22:00:00.000Z'
+			};
 
 		beforeEach(
 			function() {
-				inject(function ($rootScope, $controller, OrderService, $state, $auth) {
+				inject(function ($rootScope, $controller, OrderService, OrderStatusService, AccountService, $state, $auth) {
 					scope = $rootScope.$new();
 					state = $state;
 					auth = $auth;
+					orderStatusService = OrderStatusService;
+					accountService = AccountService;
 
 					ctrl = $controller('OrderListController', {
 						$scope: scope,
@@ -119,6 +130,40 @@
 			ctrl.isAuthenticated();
 
 			expect(auth.isAuthenticated).toHaveBeenCalled();
+		});
+
+
+		it('isOrderRemoveEnabled: should return true.', function () {
+			var user = {_id:1, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
+
+			spyOn(accountService, 'getUserData').and.returnValue(user);
+			spyOn(orderStatusService, 'isOrderActive').and.returnValue(true);
+
+			var response = ctrl.isOrderRemoveEnabled(exampleOrder);
+
+			expect(response).toBeTruthy();
+		});
+
+		it('isOrderRemoveEnabled: should return false if order from other user.', function () {
+			var user = {_id:2, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
+
+			spyOn(accountService, 'getUserData').and.returnValue(user);
+			spyOn(orderStatusService, 'isOrderActive').and.returnValue(true);
+
+			var response = ctrl.isOrderRemoveEnabled(exampleOrder);
+
+			expect(response).toBeFalsy();
+		});
+
+		it('isOrderRemoveEnabled: should return false if ordered status is close.', function () {
+			var user = {_id:1, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
+
+			spyOn(accountService, 'getUserData').and.returnValue(user);
+			spyOn(orderStatusService, 'isOrderActive').and.returnValue(false);
+
+			var response = ctrl.isOrderRemoveEnabled(exampleOrder);
+
+			expect(response).toBeFalsy();
 		});
 
 		afterEach(function() {

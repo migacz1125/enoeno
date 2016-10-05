@@ -29,33 +29,73 @@
 			expect(sut.isOrderFinalized).toBeDefined();
 			expect(sut.isOrderOrdered).toBeDefined();
 			expect(sut.isOrderDelivered).toBeDefined();
-//			expect(sut.isOrderRemoveEnabled).toBeDefined();
 		});
 
-		it('getNewOrder: should return new order object', function () {
-//			expect(sut.getNewOrder()).toEqual({completed: false, title: '', user: null, price: '', date: ''});
-		});
-
-		/*it('loadOrders: should return orders collection', function () {
-			spyOn(orderStorage, 'get').and.callFake(function () {
+		it('loadListStatus: should return status value', function () {
+			spyOn(statusStorage, 'get').and.callFake(function () {
 				var deferred = q.defer();
-				deferred.resolve([angular.copy(exampleOrder)]);
+				deferred.resolve(0);
 				return deferred.promise;
 			});
 
-			sut.loadOrders();
+			sut.loadListStatus();
 			scope.$digest();
 
-		    expect(orderStorage.get).toHaveBeenCalled();
-			expect(sut.getOrders()[0].date).toEqual(new Date(exampleOrder.date));
-			expect(sut.getOrders()[0].price).toEqual(exampleOrder.price);
-			expect(sut.getOrders()[0].title).toEqual(exampleOrder.title);
-			expect(sut.getOrders()[0].completed).toEqual(exampleOrder.completed);
-			expect(sut.getOrders()[0].user).toEqual(exampleOrder.user);
-		});*/
+		    expect(statusStorage.get).toHaveBeenCalled();
+			expect(sut.getStatus()).toEqual(0);
+		});
 
-		/*afterEach(function() {
+		it('updateListStatus: should put actual status', function () {
+			spyOn(statusStorage, 'put').and.callFake(function () {
+				var deferred = q.defer();
+				deferred.resolve();
+				return deferred.promise;
+			});
+
+			sut.updateListStatus(1);
+			scope.$digest();
+
+			expect(statusStorage.put).toHaveBeenCalledWith(1);
+		});
+
+		it('openOrdering: should change status as OPEN', function () {
+			spyOn(sut, 'updateListStatus');
+
+			sut.openOrdering();
+
+			expect(sut.updateListStatus).toHaveBeenCalledWith(0);
+			expect(sut.getStatus()).toEqual(0);
+		});
+
+		it('finalizedOrdering: should change status as STATUS_FINALIZED', function () {
+			spyOn(sut, 'updateListStatus');
+
+			sut.finalizedOrdering();
+
+			expect(sut.updateListStatus).toHaveBeenCalledWith(1);
+			expect(sut.getStatus()).toEqual(1);
+		});
+
+		it('orderedOrders: should change status as STATUS_ORDERED', function () {
+			spyOn(sut, 'updateListStatus');
+
+			sut.orderedOrders();
+
+			expect(sut.updateListStatus).toHaveBeenCalledWith(2);
+			expect(sut.getStatus()).toEqual(2);
+		});
+
+		it('deliveredOrders: should change status as STATUS_DELIVERED', function () {
+			spyOn(sut, 'updateListStatus');
+
+			sut.deliveredOrders();
+
+			expect(sut.updateListStatus).toHaveBeenCalledWith(3);
+			expect(sut.getStatus()).toEqual(3);
+		});
+
+		afterEach(function() {
 			scope.$destroy();
-		});*/
+		});
 	});
 }());
