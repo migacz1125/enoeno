@@ -12,8 +12,6 @@ function RestaurantService(RestaurantStorage) {
 		selectedRestaurant = null;
 
 	return {
-//		selectedRestaurant: null,
-
 		/**
 		 * Load orders collection from backend data.
 		 *

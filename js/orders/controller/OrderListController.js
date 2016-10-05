@@ -22,16 +22,16 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
 		TAP_ACTIVE = 'active';
 
 	vm.orderService = OrderService;
-	vm.isAllCompleted = OrderService.isAllOrderCompleted();
+	vm.isAllCompleted = vm.orderService.isAllOrderCompleted();
 	vm.orders = ordersData;
 
 	/**
 	 * Listener to all changes om orders.
 	 */
 	$scope.$watch('OrderListCtrl.orders', function () {
-		vm.remainingCount = OrderService.getNumOfActive();
-		vm.completedCount = OrderService.getNumOfCompleted();
-		vm.isAllCompleted = OrderService.isAllOrderCompleted();
+		vm.remainingCount = vm.orderService.getNumOfActive();
+		vm.completedCount = vm.orderService.getNumOfCompleted();
+		vm.isAllCompleted = vm.orderService.isAllOrderCompleted();
 	}, true);
 
 	/**
@@ -53,8 +53,7 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
 	 * Clean up memory after destroy component.
 	 */
 	$scope.$on('$destroy', function(){
-		vm = null;
-		$scope = null;
+		vm.clearAfterDestroy();
 	});
 
 	/**
@@ -73,5 +72,10 @@ function OrderListCtrl($scope, OrderService, ordersData, $auth, $state) {
 
 	vm.isAuthenticated = function() {
 		return $auth.isAuthenticated();
+	};
+
+	vm.clearAfterDestroy = function () {
+		vm = null;
+		$scope = null;
 	};
 }
