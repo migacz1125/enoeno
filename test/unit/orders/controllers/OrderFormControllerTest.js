@@ -8,22 +8,24 @@
 		var scope, ctrl, orderService;
 
 		beforeEach(
-			inject(function ($rootScope, $controller, OrderService, RestaurantService) {
+			inject(function ($rootScope, $controller, OrderService, OrderStatusService, RestaurantService) {
 
 				scope = $rootScope.$new();
 				ctrl = $controller('OrderFormController', {
 					$scope: scope,
 					OrderService: OrderService,
+					OrderStatusService: OrderStatusService,
 					restaurantsData: {},
 					userData: {},
 					$auth: {},
-					RestaurantService: RestaurantService }
-				);
+					RestaurantService: RestaurantService
+				});
 			}
 		));
 
 		it('Should default value after create', function () {
 			expect(ctrl.orderService).toBeDefined();
+			expect(ctrl.orderStatusService).toBeDefined();
 			expect(ctrl.restaurantService).toBeDefined();
 			expect(ctrl.restaurants).toBeDefined();
 			expect(ctrl.user).toBeDefined();

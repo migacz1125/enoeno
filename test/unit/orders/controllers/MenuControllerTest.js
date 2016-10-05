@@ -8,15 +8,15 @@
 		var scope, ctrl;
 
 		beforeEach(
-			inject(function ($rootScope, $controller, OrderService) {
+			inject(function ($rootScope, $controller, OrderStatusService) {
 				scope = $rootScope.$new();
-				ctrl = $controller('MenuController', { $scope: scope, OrderService: OrderService });
+				ctrl = $controller('MenuController', { $scope: scope, OrderStatusService: OrderStatusService});
 			}
 		));
 
 		it('Should default isMenuOpen default value', function () {
 			expect(ctrl.isMenuOpen).toBeFalsy();
-			expect(ctrl.orderService).toBeDefined();
+			expect(ctrl.orderStatusService).toBeDefined();
 		});
 
 		it('Should change isMenuOpen value', function () {

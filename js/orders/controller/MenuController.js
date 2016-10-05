@@ -5,16 +5,16 @@ angular
 	.module('orders')
 	.controller('MenuController', [
 		'$scope',
-		'OrderService',
+		'OrderStatusService',
 		MenuCtrl
 	]);
 
-function MenuCtrl($scope, OrderService) {
+function MenuCtrl($scope, OrderStatusService) {
 	'use strict';
 
 	var vm = this;
-	vm.orderService = OrderService;
 	vm.isMenuOpen = false;
+	vm.orderStatusService = OrderStatusService;
 
 	/**
 	 * Clean up memory after destroy component.

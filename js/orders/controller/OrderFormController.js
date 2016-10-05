@@ -10,15 +10,17 @@ angular
 		'userData',
 		'$auth',
 		'RestaurantService',
+		'OrderStatusService',
 		OrderFormCtrl
 	]);
 
-function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService) {
+function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService, OrderStatusService) {
 	'use strict';
 
 	var vm = this;
 
 	vm.orderService = OrderService;
+	vm.orderStatusService = OrderStatusService;
 	vm.restaurants = restaurantsData;
 	vm.user = userData;
 	vm.restaurantService = RestaurantService;
