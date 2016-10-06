@@ -5,19 +5,20 @@
 	beforeEach(module('orders'));
 
 	describe('OrderFormController Test', function () {
-		var scope, ctrl, orderService;
+		var scope, ctrl, auth;
 
 		beforeEach(
-			inject(function ($rootScope, $controller, OrderService, OrderStatusService, RestaurantService) {
-
+			inject(function ($rootScope, $controller, OrderService, OrderStatusService, RestaurantService, $auth) {
 				scope = $rootScope.$new();
+				auth = $auth;
+
 				ctrl = $controller('OrderFormController', {
 					$scope: scope,
 					OrderService: OrderService,
 					OrderStatusService: OrderStatusService,
 					restaurantsData: {},
 					userData: {},
-					$auth: {},
+					$auth: $auth,
 					RestaurantService: RestaurantService
 				});
 			}
@@ -43,6 +44,14 @@
 			scope.$digest();
 			expect(ctrl.restaurantService.selectedMeal).toBeNull();
 			expect(ctrl.isAddOrderEnabled).toBeFalsy();
+		});
+
+		it('isAuthenticated: should call isAuthenticated form auth service', function () {
+			spyOn(auth, 'isAuthenticated');
+
+			ctrl.isAuthenticated();
+
+			expect(auth.isAuthenticated).toHaveBeenCalled();
 		});
 
 		it('addOrder should add new item to storage', function () {

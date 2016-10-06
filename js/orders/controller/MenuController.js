@@ -16,6 +16,7 @@ function MenuCtrl($scope, OrderStatusService, OrderService) {
 	var vm = this;
 	vm.isMenuOpen = false;
 	vm.orderStatusService = OrderStatusService;
+	vm.orderService = OrderService;
 
 	/**
 	 * Clean up memory after destroy component.
@@ -34,7 +35,7 @@ function MenuCtrl($scope, OrderStatusService, OrderService) {
 	};
 
 	vm.deliveredStatusAndMarkAllOrder = function() {
-		OrderStatusService.deliveredOrders();
-		OrderService.markAll(false);
+		vm.orderStatusService.deliveredOrders();
+		vm.orderService.markAll(false);
 	};
 }

@@ -73,7 +73,7 @@ angular.module('orders.routes', ['ui.router'])
 								return RestaurantService.loadRestaurant();
 							},
 							userData: function(AccountService) {
-								return AccountService.getUserData();
+								return AccountService.loadUserData();
 							},
 							listStatus: function (OrderStatusService) {
 								OrderStatusService.loadListStatus();

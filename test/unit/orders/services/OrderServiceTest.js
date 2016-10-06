@@ -153,6 +153,14 @@
 			expect(orderStorage.delete).toHaveBeenCalledWith(exampleOrder);
 		});
 
+		it('clearCompletedOrders: should update order in storage.', function () {
+			spyOn(orderStorage, 'clearCompleted');
+
+			sut.clearCompletedOrders();
+
+			expect(orderStorage.clearCompleted).toHaveBeenCalled();
+		});
+
 		it('markAll: should update all orders completed as false.', function () {
 			exampleOrder.completed = true;
 

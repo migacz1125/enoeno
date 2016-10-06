@@ -22,6 +22,22 @@ module.exports = function (config) {
 		logLevel: config.LOG_INFO,
 		autoWatch: true,
 		singleRun: false,
-		browsers: ['PhantomJS']
+		browsers: ['PhantomJS'],
+
+		//coverage config
+		reporters: ['progress', 'coverage'],
+
+		preprocessors: {
+			// source files, that you wanna generate coverage for
+			// do not include tests or libraries
+			// (these files will be instrumented by Istanbul)
+			'js/**/*.js': ['coverage']
+		},
+
+		// optionally, configure the reporter
+		coverageReporter: {
+			type : 'html',
+			dir : 'test/coverage/'
+		}
 	});
 };

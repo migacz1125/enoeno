@@ -19,3 +19,4 @@ node_modules/todomvc-common/*
 .idea/
 index.html___jb_old___
 data/
+test/coverage/

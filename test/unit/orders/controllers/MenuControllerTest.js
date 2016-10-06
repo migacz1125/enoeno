@@ -33,6 +33,16 @@
 			expect(ctrl.clearAfterDestroy).toHaveBeenCalled();
 		});
 
+		it('deliveredStatusAndMarkAllOrder: should delivered status and mark all orders.', function () {
+			spyOn(ctrl.orderStatusService, 'deliveredOrders');
+			spyOn(ctrl.orderService, 'markAll');
+
+			ctrl.deliveredStatusAndMarkAllOrder();
+
+			expect(ctrl.orderStatusService.deliveredOrders).toHaveBeenCalled();
+			expect(ctrl.orderService.markAll).toHaveBeenCalledWith(false);
+		});
+
 		afterEach(function() {
 			scope.$destroy();
 		});

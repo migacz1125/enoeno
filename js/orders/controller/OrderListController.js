@@ -83,7 +83,6 @@ function OrderListCtrl($scope, OrderService, OrderStatusService, AccountService,
 
 	vm.isOrderRemoveEnabled = function (order) {
 		var currentUser = AccountService.getUserData();
-
 		return OrderStatusService.isOrderActive() && order.user._id === currentUser._id;
 	};
 }

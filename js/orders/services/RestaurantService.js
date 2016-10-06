@@ -28,6 +28,10 @@ function RestaurantService(RestaurantStorage) {
 			}.bind(this));
 		},
 
+		getRestaurants: function () {
+			return restaurants;
+		},
+
 		getSelectedRestaurant: function () {
 			return selectedRestaurant;
 		},
