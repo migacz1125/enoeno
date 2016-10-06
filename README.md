@@ -3,7 +3,7 @@
 ## Run app
 * clone git repository
 * npm install
-* run node_modules\\.bin\gulp start
+* run server: node_modules\\.bin\gulp start
 * put in browser: localhost:8000\index.html
 
 ## System requirments
