@@ -10,9 +10,9 @@
                                  ng-disabled="true"
                                  class="green">
                     </md-checkbox>
-                    <img alt="{{ person.name }}" ng-src="{{ order.userAvatar }}" class="md-avatar" />
+                    <img alt="{{ order.user.displayName }}" ng-src="{{ order.user.picture }}" class="md-avatar" />
                     <p>{{order.title}} - {{order.price}} zł</p>
-                    <md-icon class="material-icons" ng-show="OrderListCtrl.orderService.isOrderActive()" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
+                    <md-icon class="material-icons" ng-show="OrderListCtrl.isOrderRemoveEnabled(order)" ng-click="OrderListCtrl.orderService.removeOrder(order)">delete</md-icon>
                 </md-list-item>
             </md-subheader>
         </md-list>
@@ -23,7 +23,7 @@
             <ng-pluralize count="OrderListCtrl.remainingCount" when="{ one: 'order left', other: 'orders left' }"></ng-pluralize>
         </div>
         <div flex>
-            <md-button id="clear-completed" class="btn--pink md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear delivered</md-button>
+            <md-button id="clear-completed" class="md-primary md-raised" ng-click="OrderListCtrl.orderService.clearCompletedOrders()" ng-disabled="!OrderListCtrl.completedCount">Clear delivered</md-button>
         </div>
     </div>
 </md-content>

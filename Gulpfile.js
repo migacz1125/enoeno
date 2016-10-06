@@ -8,7 +8,8 @@ var gulp = require('gulp'),
 	sourcemaps = require('gulp-sourcemaps'),
 	karmaServer = require('karma').Server,
 	connect = require('gulp-connect'),
-	exec = require('child_process').exec;
+	exec = require('child_process').exec,
+	guppy = require('git-guppy')(gulp);
 
 /**
  * Run eslint on source code to check code style.
@@ -58,6 +59,15 @@ gulp.task('test', function (done) {
 	}, done).start();
 });
 
+/**
+ * Watch for file changes and re-run tests on each change
+ */
+gulp.task('tdd', function (done) {
+	new karmaServer({
+		configFile: __dirname + '/test/config/karma.conf.js'
+	}, done).start();
+});
+
 gulp.task('node-server', function (cb) {
 	exec('mongod --dbpath ./data', function (err, stdout, stderr) {
 		console.log(stdout);
@@ -78,3 +88,5 @@ gulp.task('build', ['check-style', 'test', 'concat-src'], function() {
 gulp.task('start', ['build', 'connect', 'node-server'], function () {
 
 });
+
+gulp.task('pre-commit', ['check-style', 'test']);

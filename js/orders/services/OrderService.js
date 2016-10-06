@@ -2,26 +2,30 @@
 
 angular
 	.module('orders')
-	.factory('OrderService', ['OrderStorage', 'StatusStorage', OrderService]);
+	.factory('OrderService', ['OrderStorage', OrderService]);
 
-function OrderService(OrderStorage, StatusStorage) {
+function OrderService(OrderStorage) {
 	'use strict';
 
 	var newOrder = {
 		completed: false,
 		title: '',
-		userAvatar: '',
-		userName: '',
+		user: null,
 		price:'',
 		date:''
 	},
-		orders = null,
-		orderListStatus = 0;
+		orders = null;
 
-	var STATUS_OPEN = 0,
-		STATUS_FINALIZED = 1,
-		STATUS_ORDERED = 2,
-		STATUS_DELIVERED = 3;
+	var _getCurrentDate = function () {
+		var currentDate = new Date();
+
+		currentDate.setHours(0);
+		currentDate.setMinutes(0);
+		currentDate.setSeconds(0);
+		currentDate.setMilliseconds(0);
+
+		return currentDate;
+	};
 
 	return {
 		/**
@@ -50,36 +54,51 @@ function OrderService(OrderStorage, StatusStorage) {
 					item.date = new Date(item.date);
 					return item;
 				});
-				console.log('----- ordersCollection: ', ordersCollection);
+
 				return ordersCollection;
 			}.bind(this));
+		},
+
+		getOrders: function () {
+			return orders;
 		},
 
 		/**
 		 * Add new order item to collection.
 		 */
 		addOrder: function (newOrderItem) {
-			if (!newOrder.title) {
+			if (!newOrderItem.title) {
 				return;
 			}
 
-			newOrderItem.date = new Date();
-
-			newOrderItem.date.setHours(0);
-			newOrderItem.date.setMinutes(0);
-			newOrderItem.date.setSeconds(0);
-			newOrderItem.date.setMilliseconds(0);
+			newOrderItem.date = _getCurrentDate();
 
 			OrderStorage.insert(newOrderItem).then(function success() {
 				newOrder = {
 					completed: false,
 					title: '',
-					userAvatar: '',
-					userName: '',
+					user: null,
 					price:'',
 					date:''
 				};
 			});
+		},
+
+		/**
+		 * Check that user order meal today yet.
+		 *
+		 * @param {Object} user
+		 * @returns {boolean}
+		 */
+		isUserOrderedToday: function (user) {
+			var response = orders.some(function(order) {
+				return (
+					order.user._id === user._id &&
+					Number(order.date) === Number(_getCurrentDate())
+				);
+			});
+
+			return response;
 		},
 
 		/**
@@ -165,55 +184,5 @@ function OrderService(OrderStorage, StatusStorage) {
 				return (order.completed === true);
 			}).length;
 		},
-
-		updateListStatus: function (status) {
-			StatusStorage.put(status).then(function success() {
-
-			});
-		},
-
-		loadListStatus: function () {
-			StatusStorage.get().then(function (status) {
-				orderListStatus = status;
-				return status;
-			});
-		},
-
-		openOrdering: function () {
-			orderListStatus = STATUS_OPEN;
-			this.updateListStatus(STATUS_OPEN);
-		},
-
-		finalizedOrdering: function () {
-			orderListStatus = STATUS_FINALIZED;
-			this.updateListStatus(STATUS_FINALIZED);
-		},
-
-		orderedOrders: function () {
-			orderListStatus = STATUS_ORDERED;
-			this.updateListStatus(STATUS_ORDERED);
-		},
-
-		deliveredOrders: function () {
-			orderListStatus = STATUS_DELIVERED;
-			this.updateListStatus(STATUS_DELIVERED);
-			this.markAll(false);
-		},
-
-		isOrderActive: function () {
-			return orderListStatus === STATUS_OPEN;
-		},
-
-		isOrderFinalized: function () {
-			return orderListStatus === STATUS_FINALIZED;
-		},
-
-		isOrderOrdered: function () {
-			return orderListStatus === STATUS_ORDERED;
-		},
-
-		isOrderDelivered: function () {
-			return orderListStatus === STATUS_DELIVERED;
-		}
 	};
 };

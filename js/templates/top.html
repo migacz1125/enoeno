@@ -1,35 +1,36 @@
 <div>
-    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderActive()">
+    <div layout="row" layout-align="center" ng-if="OrderFormCtrl.orderStatusService.isOrderActive()">
         <div layout="column">
             <md-list-item class="md-2-line">
-                <img alt="{{ OrderFromCtrl.user.displayName }}" ng-src="{{ OrderFromCtrl.user.picture }}" class="md-avatar" />
+                <img alt="{{ OrderFormCtrl.user.displayName }}" ng-src="{{ OrderFormCtrl.user.picture }}" class="md-avatar" />
                 <div class="md-list-item-text">
-                    <h3>{{ OrderFromCtrl.user.displayName }}</h3>
-                    <p>What You will to order ?</p>
+                    <h3>{{ OrderFormCtrl.user.displayName }}</h3>
+                    <p ng-show="!OrderFormCtrl.orderService.isUserOrderedToday(OrderFormCtrl.user)">What You will to order ?</p>
+                    <p ng-show="OrderFormCtrl.orderService.isUserOrderedToday(OrderFormCtrl.user)">You have ordered food today.</p>
                 </div>
             </md-list-item>
         </div>
-        <div layout="column">
+        <div layout="column" ng-if="!OrderFormCtrl.orderService.isUserOrderedToday(OrderFormCtrl.user)">
             <form id="new-order" layout="row" layout-align="center center" flex name="orderForm">
                 <md-input-container class="md-block">
                     <label>Restaurant</label>
-                    <md-select placeholder="Select restaurant" ng-model="OrderFromCtrl.restaurantService.selectedRestaurant">
-                        <md-option ng-value="restaurant" ng-repeat="restaurant in OrderFromCtrl.restaurants">{{restaurant.name}}</md-option>
+                    <md-select placeholder="Select restaurant" ng-model="OrderFormCtrl.restaurantService.selectedRestaurant">
+                        <md-option ng-value="restaurant" ng-repeat="restaurant in OrderFormCtrl.restaurants">{{restaurant.name}}</md-option>
                     </md-select>
                 </md-input-container>
-                <md-input-container ng-if="OrderFromCtrl.restaurantService.selectedRestaurant" class="md-block">
+                <md-input-container ng-if="OrderFormCtrl.restaurantService.selectedRestaurant" class="md-block">
                     <label>Meal</label>
-                    <md-select placeholder="Select meal" ng-model="OrderFromCtrl.restaurantService.selectedMeal">
-                        <md-option ng-value="meal" ng-repeat="meal in OrderFromCtrl.restaurantService.selectedRestaurant.menu">{{meal.name}}, {{meal.price}} zł</md-option>
+                    <md-select placeholder="Select meal" ng-model="OrderFormCtrl.restaurantService.selectedMeal">
+                        <md-option ng-value="meal" ng-repeat="meal in OrderFormCtrl.restaurantService.selectedRestaurant.menu">{{meal.name}}, {{meal.price}} zł</md-option>
                     </md-select>
                 </md-input-container>
                 <div layout="row" layout-align="center center" class="md-margin">
-                    <md-button class="md-primary md-raised" ng-click="OrderFromCtrl.addOrder()">Add order</md-button>
+                    <md-button class="md-primary md-raised" ng-disabled="!OrderFormCtrl.isAddOrderEnabled" ng-click="OrderFormCtrl.addOrder()">Add order</md-button>
                 </div>
             </form>
         </div>
     </div>
-    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderFinalized()">
+    <div layout="row" layout-align="center" ng-if="OrderFormCtrl.orderStatusService.isOrderFinalized()">
         <div layout="column">
             <md-list-item class="md-2-line">
                 <md-icon class="material-icons" aria-label="Finalized ordering">lock</md-icon>
@@ -40,7 +41,7 @@
             </md-list-item>
         </div>
     </div>
-    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderOrdered()">
+    <div layout="row" layout-align="center" ng-if="OrderFormCtrl.orderStatusService.isOrderOrdered()">
         <div layout="column">
             <md-list-item class="md-2-line">
                 <md-icon><i class="fa fa-truck"></i></md-icon>
@@ -51,7 +52,7 @@
             </md-list-item>
         </div>
     </div>
-    <div layout="row" layout-align="center" ng-if="OrderFromCtrl.orderService.isOrderDelivered()">
+    <div layout="row" layout-align="center" ng-if="OrderFormCtrl.orderStatusService.isOrderDelivered()">
         <div layout="column">
             <md-list-item class="md-2-line">
                 <md-icon class="material-icons" aria-label="Delivered orders">done_all</md-icon>

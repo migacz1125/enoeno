@@ -22,4 +22,15 @@ angular.module('orders', ['ngRoute', 'ui.router', 'satellizer', 'ngMaterial', 'o
 
 		$authProvider.baseUrl = 'http://localhost:3000';
 		$authProvider.withCredentials = false;
+	})
+	.config(function($mdThemingProvider) {
+		'use strict';
+
+		$mdThemingProvider.theme('default')
+			.primaryPalette('orange', {
+				'default': '800'
+			})
+			.accentPalette('orange', {
+				'default': '200'
+			});
 	});
