@@ -66,17 +66,17 @@ angular.module('orders.routes', ['ui.router'])
 					},
 					'top@home': {
 						templateUrl: './js/templates/top.html',
-						controller: 'OrderFromController as OrderFromCtrl',
+						controller: 'OrderFormController as OrderFormCtrl',
 						resolve: {
 							loginRequired: loginRequired,
 							restaurantsData: function (RestaurantService) {
 								return RestaurantService.loadRestaurant();
 							},
 							userData: function(AccountService) {
-								return AccountService.getUserData();
+								return AccountService.loadUserData();
 							},
-							listStatus: function (OrderService) {
-								OrderService.loadListStatus();
+							listStatus: function (OrderStatusService) {
+								OrderStatusService.loadListStatus();
 							}
 						}
 					},

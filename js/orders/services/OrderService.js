@@ -2,9 +2,9 @@
 
 angular
 	.module('orders')
-	.factory('OrderService', ['OrderStorage', 'StatusStorage','AccountService', OrderService]);
+	.factory('OrderService', ['OrderStorage', OrderService]);
 
-function OrderService(OrderStorage, StatusStorage, AccountService) {
+function OrderService(OrderStorage) {
 	'use strict';
 
 	var newOrder = {
@@ -14,13 +14,7 @@ function OrderService(OrderStorage, StatusStorage, AccountService) {
 		price:'',
 		date:''
 	},
-		orders = null,
-		orderListStatus = 0;
-
-	var STATUS_OPEN = 0,
-		STATUS_FINALIZED = 1,
-		STATUS_ORDERED = 2,
-		STATUS_DELIVERED = 3;
+		orders = null;
 
 	var _getCurrentDate = function () {
 		var currentDate = new Date();
@@ -65,11 +59,15 @@ function OrderService(OrderStorage, StatusStorage, AccountService) {
 			}.bind(this));
 		},
 
+		getOrders: function () {
+			return orders;
+		},
+
 		/**
 		 * Add new order item to collection.
 		 */
 		addOrder: function (newOrderItem) {
-			if (!newOrder.title) {
+			if (!newOrderItem.title) {
 				return;
 			}
 
@@ -100,7 +98,7 @@ function OrderService(OrderStorage, StatusStorage, AccountService) {
 				);
 			});
 
-			return !response;
+			return response;
 		},
 
 		/**
@@ -186,61 +184,5 @@ function OrderService(OrderStorage, StatusStorage, AccountService) {
 				return (order.completed === true);
 			}).length;
 		},
-
-		updateListStatus: function (status) {
-			StatusStorage.put(status).then(function success() {
-
-			});
-		},
-
-		loadListStatus: function () {
-			StatusStorage.get().then(function (status) {
-				orderListStatus = status;
-				return status;
-			});
-		},
-
-		openOrdering: function () {
-			orderListStatus = STATUS_OPEN;
-			this.updateListStatus(STATUS_OPEN);
-		},
-
-		finalizedOrdering: function () {
-			orderListStatus = STATUS_FINALIZED;
-			this.updateListStatus(STATUS_FINALIZED);
-		},
-
-		orderedOrders: function () {
-			orderListStatus = STATUS_ORDERED;
-			this.updateListStatus(STATUS_ORDERED);
-		},
-
-		deliveredOrders: function () {
-			orderListStatus = STATUS_DELIVERED;
-			this.updateListStatus(STATUS_DELIVERED);
-			this.markAll(false);
-		},
-
-		isOrderActive: function () {
-			return orderListStatus === STATUS_OPEN;
-		},
-
-		isOrderFinalized: function () {
-			return orderListStatus === STATUS_FINALIZED;
-		},
-
-		isOrderOrdered: function () {
-			return orderListStatus === STATUS_ORDERED;
-		},
-
-		isOrderDelivered: function () {
-			return orderListStatus === STATUS_DELIVERED;
-		},
-
-		isOrderRemoveEnabled: function (order) {
-			var currentUser = AccountService.getUserData();
-
-			return this.isOrderActive() && order.user._id === currentUser._id;
-		}
 	};
 };

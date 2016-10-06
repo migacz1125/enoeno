@@ -3,22 +3,24 @@
  */
 angular
 	.module('orders')
-	.controller('OrderFromController', [
+	.controller('OrderFormController', [
 		'$scope',
 		'OrderService',
 		'restaurantsData',
 		'userData',
 		'$auth',
 		'RestaurantService',
-		OrderFromCtrl
+		'OrderStatusService',
+		OrderFormCtrl
 	]);
 
-function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService) {
+function OrderFormCtrl($scope, OrderService, restaurantsData, userData, $auth, RestaurantService, OrderStatusService) {
 	'use strict';
 
 	var vm = this;
 
 	vm.orderService = OrderService;
+	vm.orderStatusService = OrderStatusService;
 	vm.restaurants = restaurantsData;
 	vm.user = userData;
 	vm.restaurantService = RestaurantService;
@@ -27,8 +29,8 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	/**
 	 * Listener to all changes om orders.
 	 */
-	$scope.$watch('OrderFromCtrl.restaurantService.selectedMeal', function (value) {
-		if (value) {
+	$scope.$watch('OrderFormCtrl.restaurantService.selectedMeal', function () {
+		if (vm.restaurantService.selectedMeal) {
 			vm.isAddOrderEnabled = true;
 		}
 	}, true);
@@ -37,8 +39,7 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	 * Clean up memory after destroy component.
 	 */
 	$scope.$on('$destroy', function(){
-		vm = null;
-		$scope = null;
+		vm.clearAfterDestroy();
 	});
 
 	vm.isAuthenticated = function() {
@@ -46,13 +47,18 @@ function OrderFromCtrl($scope, OrderService, restaurantsData, userData, $auth, R
 	};
 
 	vm.addOrder = function () {
-		var order = OrderService.getNewOrder(),
+		var order = vm.orderService.getNewOrder(),
 			selectedMeal = vm.restaurantService.selectedMeal;
 
 		order.user = vm.user;
 		order.title = vm.restaurantService.selectedRestaurant.name + ' - ' + selectedMeal.name;
 		order.price = selectedMeal.price;
 
-		OrderService.addOrder(order);
+		vm.orderService.addOrder(order);
+	};
+
+	vm.clearAfterDestroy = function () {
+		vm = null;
+		$scope = null;
 	};
 }

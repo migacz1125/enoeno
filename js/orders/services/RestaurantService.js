@@ -12,8 +12,6 @@ function RestaurantService(RestaurantStorage) {
 		selectedRestaurant = null;
 
 	return {
-//		selectedRestaurant: null,
-
 		/**
 		 * Load orders collection from backend data.
 		 *
@@ -28,6 +26,10 @@ function RestaurantService(RestaurantStorage) {
 				restaurants = restaurantsCollection;
 				return restaurantsCollection;
 			}.bind(this));
+		},
+
+		getRestaurants: function () {
+			return restaurants;
 		},
 
 		getSelectedRestaurant: function () {

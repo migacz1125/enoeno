@@ -17,7 +17,9 @@ function LogoutCtrl($scope, $location, $auth) {
 
 	var vm = this;
 
-	if (!$auth.isAuthenticated()) { return; }
+	if (!$auth.isAuthenticated()) {
+		return;
+	}
 
 	$auth.logout()
 		.then(function() {

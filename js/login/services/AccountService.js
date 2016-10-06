@@ -13,7 +13,7 @@ function AccountModel($http) {
 		},
 
 		updateProfile: function(profileData) {
-			return $http.put('/api/me', profileData);
+			return $http.put('http://localhost:3000/api/me', profileData);
 		}
 	};
 };
@@ -23,7 +23,11 @@ function AccountService(AccountModel) {
     var user = null;
 
 	return {
-		getUserData: function () {
+		getUserData: function() {
+			return user;
+		},
+
+		loadUserData: function() {
 			if (user) {
 				return user;
 			}
@@ -33,7 +37,9 @@ function AccountService(AccountModel) {
 					user = response.data;
 					return response.data;
 				})
-				.catch(function(response) {});
+				.catch(function(response) {
+
+				});
 		}
 	};
 };
