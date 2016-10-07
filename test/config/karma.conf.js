@@ -15,6 +15,7 @@ module.exports = function (config) {
 			'node_modules/satellizer/dist/satellizer.min.js',
 			'node_modules/angular-ui-router/release/angular-ui-router.min.js',
 			'node_modules/angular-filter/dist/angular-filter.min.js',
+			'node_modules/jasmine-data-provider/src/index.js',
 			'js/**/*.js',
 			'test/unit/**/*.js'
 		],

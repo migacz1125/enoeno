@@ -166,6 +166,57 @@
 			expect(response).toBeFalsy();
 		});
 
+		using({
+			'should return true with no filter and one order': {
+				statusFilter: {},
+				orders: [{completed:false, date:'the same date'}],
+				expected: true
+			},
+			'should return false with no filter and no order': {
+				statusFilter: {},
+				orders: [],
+				expected: false
+			},
+			'should return true with filter active and active order': {
+				statusFilter: {completed: false},
+				orders: [{completed: false, date:'the same date'}],
+				expected: true
+			},
+			'should return false with filter active and completed order': {
+				statusFilter: {completed: false},
+				orders: [{completed: true, date:'the same date'}],
+				expected: false
+			},
+			'should return false with filter active and no order': {
+				statusFilter: {completed: false},
+				orders: [],
+				expected: false
+			},
+			'should return true with filter completed and completed order': {
+				statusFilter: {completed: true},
+				orders: [{completed: true, date:'the same date'}],
+				expected: true
+			},
+			'should return false with filter completed and active order': {
+				statusFilter: {completed: true},
+				orders: [{completed: false, date:'the same date'}],
+				expected: false
+			},
+			'should return false with filter completed and no order': {
+				statusFilter: {completed: true},
+				orders: [],
+				expected: false
+			}
+		}, function (data, description) {
+			it('isItemInCurrentFilter: ' + description, function () {
+				ctrl.statusFilter = data.statusFilter;
+
+				var response = ctrl.isItemInCurrentFilter(data.orders);
+
+				expect(response).toEqual(data.expected);
+			});
+		});
+		
 		afterEach(function() {
 			scope.$destroy();
 		});

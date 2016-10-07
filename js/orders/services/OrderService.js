@@ -183,6 +183,6 @@ function OrderService(OrderStorage) {
 			return orders.filter(function (order) {
 				return (order.completed === true);
 			}).length;
-		},
+		}
 	};
 };
