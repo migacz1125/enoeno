@@ -85,4 +85,16 @@ function OrderListCtrl($scope, OrderService, OrderStatusService, AccountService,
 		var currentUser = AccountService.getUserData();
 		return OrderStatusService.isOrderActive() && order.user._id === currentUser._id;
 	};
+
+	vm.isItemInCurrentFilter = function(value) {
+		if (Object.keys(vm.statusFilter).length === 0 && value.length > 0) {
+			return true;
+		}
+
+		var resp = value.filter(function(order) {
+			return (order.completed === vm.statusFilter.completed);
+		});
+
+		return (resp.length > 0);
+	};
 }
