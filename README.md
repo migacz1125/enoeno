@@ -1,4 +1,4 @@
-# TakeawayApp
+# TakeawayApp ({Proof of concept)
 
 ## Run app
 * clone git repository
