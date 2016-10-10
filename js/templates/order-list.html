@@ -2,7 +2,7 @@
     <div id="todo-list" class="md-padding">
         <md-list>
             <md-subheader ng-repeat="(key, value) in OrderListCtrl.orders | groupBy: 'date'">
-                {{value[0].date.getDate()}}-{{value[0].date.getMonth()+1}}-{{value[0].date.getFullYear()}}
+                <div ng-show="OrderListCtrl.isItemInCurrentFilter(value)">{{value[0].date.getDate()}}-{{value[0].date.getMonth()+1}}-{{value[0].date.getFullYear()}}</div>
                 <md-list-item ng-repeat="order in value | filter:OrderListCtrl.statusFilter track by $index">
                     <md-checkbox ng-attr-id="{{ 'order-' + $index }}"
                                  ng-model="order.completed"
