@@ -9,14 +9,18 @@
 			scope,
 			accountModel,
 			q,
+			auth,
+			location,
 			exampleUser = {_id:1, email:null, displayName:'Bartosz Gerono', picture:'', github:6169713};
 
 		beforeEach(
-			inject(function (AccountService, $rootScope, AccountModel, $q) {
+			inject(function (AccountService, $rootScope, AccountModel, $q, $auth, $location) {
 				scope = $rootScope.$new();
 				sut = AccountService;
 				accountModel = AccountModel;
 				q = $q;
+				auth = $auth;
+				location = $location;
 			}
 		));
 
@@ -50,6 +54,55 @@
 
 			expect(accountModel.getProfile.calls.count()).toEqual(1);
 			expect(sut.getUserData()).toEqual(exampleUser);
+		});
+
+		it('loginRequired: should promise resolved is user is authenticated', function () {
+			var stubPromise = {resolve: jasmine.createSpy(), reject: jasmine.createSpy()};
+
+			spyOn(auth, 'isAuthenticated').and.returnValue(true);
+			spyOn(q, 'defer').and.returnValue(stubPromise);
+
+			sut.loginRequired();
+
+			expect(auth.isAuthenticated).toHaveBeenCalled();
+			expect(q.defer).toHaveBeenCalled();
+			expect(stubPromise.resolve).toHaveBeenCalled();
+		});
+
+		it('loginRequired: Should go to home location if  user authenticated is false.', function () {
+			spyOn(auth, 'isAuthenticated').and.returnValue(false);
+			spyOn(location, 'path');
+
+			sut.loginRequired();
+
+			expect(auth.isAuthenticated).toHaveBeenCalled();
+			expect(location.path).toHaveBeenCalledWith('/login');
+		});
+
+		it('skipIfLoggedIn: should promise reject is user is authenticated', function () {
+			var stubPromise = {resolve: jasmine.createSpy(), reject: jasmine.createSpy()};
+
+			spyOn(auth, 'isAuthenticated').and.returnValue(true);
+			spyOn(q, 'defer').and.returnValue(stubPromise);
+
+			sut.skipIfLoggedIn();
+
+			expect(auth.isAuthenticated).toHaveBeenCalled();
+			expect(q.defer).toHaveBeenCalled();
+			expect(stubPromise.reject).toHaveBeenCalled();
+		});
+
+		it('skipIfLoggedIn: should promise reject is user is authenticated', function () {
+			var stubPromise = {resolve: jasmine.createSpy(), reject: jasmine.createSpy()};
+
+			spyOn(auth, 'isAuthenticated').and.returnValue(false);
+			spyOn(q, 'defer').and.returnValue(stubPromise);
+
+			sut.skipIfLoggedIn();
+
+			expect(auth.isAuthenticated).toHaveBeenCalled();
+			expect(q.defer).toHaveBeenCalled();
+			expect(stubPromise.resolve).toHaveBeenCalled();
 		});
 
 		afterEach(function() {

@@ -9,31 +9,6 @@ angular.module('orders.routes', ['ui.router'])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		'use strict';
 
-		var loginRequired = function($q, $auth, $location) {
-			var deferred = $q.defer();
-			if ($auth.isAuthenticated()) {
-				deferred.resolve();
-			} else {
-				$location.path('/login');
-			}
-			return deferred.promise;
-		};
-
-		/**
-		 * Helper auth functions
-		 */
-		var skipIfLoggedIn = function($q, $auth) {
-
-			var deferred = $q.defer();
-			if ($auth.isAuthenticated()) {
-				deferred.reject();
-			} else {
-				deferred.resolve();
-			}
-
-			return deferred.promise;
-		};
-
 		/**
 		 * Routs definitions.
 		 */
@@ -43,7 +18,9 @@ angular.module('orders.routes', ['ui.router'])
 				templateUrl: 'js/templates/login.html',
 				controller: 'LoginController as LoginCtrl',
 				resolve: {
-					skipIfLoggedIn: skipIfLoggedIn
+					skipIfLoggedIn: function (AccountService) {
+						return AccountService.skipIfLoggedIn();
+					}
 				}
 			})
 			.state('logout', {
@@ -58,7 +35,9 @@ angular.module('orders.routes', ['ui.router'])
 						templateUrl: './js/templates/home.html',
 						controller: 'OrderListController as OrderListCtrl',
 						resolve: {
-							loginRequired: loginRequired,
+							loginRequired: function (AccountService) {
+								return AccountService.loginRequired();
+							},
 							ordersData: function (OrderService) {
 								return OrderService.loadOrders();
 							}
@@ -68,7 +47,9 @@ angular.module('orders.routes', ['ui.router'])
 						templateUrl: './js/templates/top.html',
 						controller: 'OrderFormController as OrderFormCtrl',
 						resolve: {
-							loginRequired: loginRequired,
+							loginRequired: function (AccountService) {
+								return AccountService.loginRequired();
+							},
 							restaurantsData: function (RestaurantService) {
 								return RestaurantService.loadRestaurant();
 							},

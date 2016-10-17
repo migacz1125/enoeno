@@ -3,7 +3,7 @@
 angular
 	.module('orders')
 	.factory('AccountModel', ['$http', AccountModel])
-	.factory('AccountService', ['AccountModel', AccountService]);
+	.factory('AccountService', ['AccountModel', '$q', '$auth', '$location', AccountService]);
 
 function AccountModel($http) {
 	'use strict';
@@ -18,7 +18,7 @@ function AccountModel($http) {
 	};
 };
 
-function AccountService(AccountModel) {
+function AccountService(AccountModel, $q, $auth, $location) {
 	'use strict';
     var user = null;
 
@@ -40,6 +40,33 @@ function AccountService(AccountModel) {
 				.catch(function(response) {
 
 				});
+		},
+
+		loginRequired: function() {
+			var deferred = $q.defer();
+
+			if ($auth.isAuthenticated()) {
+				deferred.resolve();
+			} else {
+				$location.path('/login');
+			}
+
+			return deferred.promise;
+		},
+
+		/**
+		 * Helper auth functions
+		 */
+		skipIfLoggedIn: function() {
+			var deferred = $q.defer();
+
+			if ($auth.isAuthenticated()) {
+				deferred.reject();
+			} else {
+				deferred.resolve();
+			}
+
+			return deferred.promise;
 		}
 	};
 };
